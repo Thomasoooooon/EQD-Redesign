@@ -1,9 +1,10 @@
 // ==============================================
-// 1. Matter.js (物理演算 - FVエリア)
+// 1. Matter.js (物理演算) & Opening Animation
 // ==============================================
 const container = document.getElementById('fv-canvas-container');
 
 if (container) {
+    // --- Matter.js の準備 (まだ動かしません) ---
     const Engine = Matter.Engine,
           Render = Matter.Render,
           Runner = Matter.Runner,
@@ -28,30 +29,33 @@ if (container) {
         }
     });
 
-    // 壁と床 (見えない壁)
+    // 壁と床
     const ground = Bodies.rectangle(width / 2, height + 60, width, 120, { isStatic: true, render: { visible: false } });
     const leftWall = Bodies.rectangle(-60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
-
     Composite.add(world, [ground, leftWall, rightWall]);
 
-    // パーツ（物体）を追加する関数
+    // マウス操作
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: { stiffness: 0.2, render: { visible: false } }
+    });
+    Composite.add(world, mouseConstraint);
+
+    // パーツ追加関数
     function addFallingObject(x, y, textureUrl, scale = 1) {
         const body = Bodies.circle(x, y, 40 * scale, { 
             restitution: 0.6, 
             friction: 0.1,
             render: {
-                sprite: {
-                    texture: textureUrl,
-                    xScale: scale,
-                    yScale: scale
-                }
+                sprite: { texture: textureUrl, xScale: scale, yScale: scale }
             }
         });
         Composite.add(world, body);
     }
 
-    // ★本番用：ユーザー設定済みリスト
+    // パーツの準備 (まだ落としません。空中にセットだけします)
     addFallingObject(width * 0.4, -100, 'img/fv-parts/fv01.png', 0.8);
     addFallingObject(width * 0.6, -200, 'img/fv-parts/fv02.png', 0.8);
     addFallingObject(width * 0.2, -300, 'img/fv-parts/fv03.png', 0.5);
@@ -69,19 +73,47 @@ if (container) {
     addFallingObject(width * 0.5, -500, 'img/fv-parts/fv15.png', 0.7);
     addFallingObject(width * 0.5, -500, 'img/fv-parts/fv16.png', 0.7);
 
-    // マウス操作
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: { stiffness: 0.2, render: { visible: false } }
-    });
-    Composite.add(world, mouseConstraint);
 
-    Render.run(render);
-    const runner = Runner.create();
-    Runner.run(runner, engine);
+    // ★ここからオープニングの制御
+    const overlay = document.getElementById('opening-overlay');
+    const video = document.getElementById('opening-video');
+
+    // 物理演算をスタートさせる関数
+    function startSimulation() {
+        Render.run(render);
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+    }
+
+    if (overlay && video) {
+        // 1. 最初はスクロール禁止にする
+        document.body.style.overflow = 'hidden';
+
+        // 2. 動画を再生 (スマホの省電力モード対策でcatchを入れる)
+        video.play().catch(e => console.log("自動再生がブロックされました:", e));
+
+        // 3. 動画が終わったら実行
+        video.addEventListener('ended', () => {
+            // フェードアウト開始
+            overlay.classList.add('is-hidden');
+            
+            // スクロール解禁
+            document.body.style.overflow = '';
+
+            // 物理演算スタート！
+            startSimulation();
+
+            // フェードアウトが終わった頃(1秒後)に要素を完全に消す
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 1000);
+        });
+
+    } else {
+        // 動画がない場合(開発中など)はすぐにスタート
+        startSimulation();
+    }
 }
-
 
 // ==============================================
 // 2. GSAP Sequence (連番アニメーション) - 修正版
@@ -220,3 +252,32 @@ if (menuBtn && globalMenu) {
         }
     });
 }
+
+
+// ==============================================
+// 6. Scroll Fade Animation (ふわっと表示)
+// ==============================================
+const fadeElements = document.querySelectorAll('.js-fade');
+
+fadeElements.forEach(element => {
+    gsap.fromTo(element, 
+        // 最初の状態（透明で、少し下にいる）
+        { 
+            opacity: 0, 
+            y: 30 
+        }, 
+        // アニメーション後の状態（不透明で、元の位置に戻る）
+        {
+            opacity: 1, 
+            y: 0, 
+            duration: 1,    // 1秒かけて
+            ease: "power2.out", // 自然な減速
+            scrollTrigger: {
+                trigger: element,
+                start: "top 85%", // 画面の下の方(85%)に来たら開始
+                // markers: true, // 動きを確認したい時はコメント外す
+                toggleActions: "play none none reverse" // 上に戻ったらまた消える設定（好みで "play none none none" にすれば一度きり）
+            }
+        }
+    );
+});

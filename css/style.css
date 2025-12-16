@@ -339,21 +339,126 @@ a:hover { opacity: 0.7; }
 .onomato-desc { font-size: 0.85rem; margin-top: 40px; text-align: justify; }
 
 /* =======================================================
-   8. フッター
+   8. フッター (カンプ再現版)
    ======================================================= */
-.footer { border-top: none; }
-.footer-nav { margin-bottom: 60px; }
-.footer-list-svg {
-    display: flex; flex-direction: column; align-items: center; gap: 30px; list-style: none; padding: 0;
+/* =======================================================
+   8. フッター (カンプ再現・白背景版)
+   ======================================================= */
+.footer {
+    background-color: #ffffff; /* 背景を白に */
+    color: #1D1D1D;            /* 文字を黒に */
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
-.footer-list-svg li a { display: block; height: 40px; }
-.footer-list-svg li a img { height: 100%; width: auto; filter: invert(1); /* 白く反転 */ }
 
-.footer-info { text-align: center; }
-.footer-logo img { width: 150px; margin-bottom: 30px; filter: invert(1); }
-.footer-social { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
-.footer-social img { width: 24px; filter: invert(1); }
-.copyright { display: block; font-size: 0.7rem; color: #888; margin-top: 20px; }
+/* 1. 上部ロゴ（左揃えに変更） */
+.footer-top-logo {
+    width: 280px;
+    max-width: 100%;
+    
+    /* 中央揃えの設定を解除して左へ */
+    margin: 0 0 50px 0; 
+    text-align: left;
+}
+.footer-top-logo img {
+    width: 100%;
+}
+
+/* 2. メニュー（左揃え・間隔を詰める） */
+.footer-nav-grid {
+    display: grid;
+    
+    /* ★変更: 幅を「画面半分」ではなく「中身に合わせて自動」にする */
+    grid-template-columns: auto auto; 
+    
+    /* ★変更: グリッド全体を左に寄せる */
+    justify-content: start;
+    
+    /* ★変更: 各画像を左揃えにする（これで縦のラインが揃います） */
+    justify-items: start; 
+    align-items: start;
+    
+    /* ここで横の間隔を調整できます！ */
+    /* 離れすぎなら小さく、くっつけたいなら 20px くらいに */
+    column-gap: 30px; 
+    
+    row-gap: 40px;
+    margin-bottom: 60px;
+}
+
+.footer-link {
+    display: block;
+    /* width: 100%; ← これを消すか、autoにします */
+    width: auto;
+}
+
+.footer-link img {
+    /* width: 100%; ← これを消して、autoにします */
+    width: auto; 
+    height: auto;
+    
+    display: block; /* 下の隙間消し */
+}
+
+/* ★★★ ここで個別にサイズ指定！ ★★★ */
+/* カンプを見ながら、ここの数字(px)を書き換えて調整してください */
+
+.item-devices img {
+    width: 104px;
+}
+
+.item-artists img {
+    width: 106px; /* 例 */
+}
+
+.item-brand img {
+    width: 84px;
+}
+
+.item-demo img {
+    width: 83px;
+}
+
+.item-support img {
+    width: 108px;
+}
+
+.item-dealers img {
+    width: 98px;
+}
+
+/* 3. 下部情報（右寄せ） */
+.footer-bottom-info {
+    text-align: right;
+}
+
+.distributor-text {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.footer-social-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 24px; /* アイコン同士の間隔 */
+}
+
+.footer-social-row img {
+    /* ★変更: サイズを48pxに */
+    width: 48px;
+    height: 48px;
+    
+    /* 画像が歪まないように念のため指定 */
+    object-fit: contain; 
+    
+    transition: opacity 0.3s;
+}
+.footer-social-row a:hover img {
+    opacity: 0.7;
+}
 
 
 /* =======================================================
@@ -485,4 +590,99 @@ a:hover { opacity: 0.7; }
 .header__menu-btn.is-active {
     background-color: #fff;
     color: #1a1a1a;
+}
+
+/* =======================================================
+   99. Opening Animation (オープニング)
+   ======================================================= */
+#opening-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff; /* 動画の背景色に合わせる */
+    z-index: 99999; /* 最前面に配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.0s ease; /* 1秒かけてゆっくり消える */
+}
+
+/* クラスがついたら透明にする */
+#opening-overlay.is-hidden {
+    opacity: 0;
+    pointer-events: none; /* 透明になったらクリックできないようにする */
+}
+
+#opening-video {
+    /* 画面いっぱいに広げる */
+    width: 100%;
+    height: 100%;
+    
+    /* 動画の比率を保ったまま画面を埋める */
+    /* ロゴが見切れる場合は 'contain' に変えてみてください */
+    object-fit: cover; 
+}
+
+/* =======================================================
+   11. Hover Interactions (ホバー演出)
+   ======================================================= */
+
+/* --- ボタンのホバー --- */
+/* 背景色を反転させ、少しふわっと浮かす */
+.btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn:hover {
+    background-color: #fff; /* 背景を白に */
+    color: #1a1a1a;         /* 文字を黒に */
+    transform: translateY(-3px); /* 少し上に浮く */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* 影をつける */
+}
+
+/* 枠線ボタンの場合は、中を塗りつぶす */
+.btn--outline:hover {
+    background-color: #fff;
+    color: #1a1a1a;
+}
+
+
+/* --- アーティストカードのホバー --- */
+/* カード全体にマウスが乗ったら、中の画像を拡大する */
+.artist-card {
+    transition: transform 0.3s ease;
+    overflow: hidden; /* はみ出した画像を隠す */
+}
+
+.artist-card__img {
+    overflow: hidden; /* 画像拡大用 */
+    border-radius: 50%; /* 丸く切り抜きたいならこれ（お好みで） */
+}
+
+.artist-card__img img {
+    transition: transform 0.5s ease, filter 0.3s ease;
+}
+
+/* ホバー時の動き */
+.artist-card:hover .artist-card__img img {
+    transform: scale(1.1); /* 画像を1.1倍に拡大 */
+    filter: grayscale(0%); /* グレーからカラーに戻す（お好みで！） */
+}
+
+
+/* --- グローバルメニューのリンク --- */
+.global-menu__list li a {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.global-menu__list li a:hover {
+    transform: scale(1.1); /* 文字/アイコンを少し大きく */
+    opacity: 1; /* 透明度リセット */
 }

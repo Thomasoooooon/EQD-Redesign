@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div id="opening-overlay">
+        <video id="opening-video" muted playsinline>
+            <source src="img/video/op.mp4" type="video/mp4">
+        </video>
+    </div>
 
     <main>
         <div class="main-logo-container">
@@ -33,14 +38,14 @@
                 </div>
                 
                 <div class="product-info">
-                    <h2 class="title-handwritten">Plumes</h2>
-                    <p class="product-category">ギターオーバードライブ</p>
-                    <p class="product-desc">
+                    <h2 class="title-handwritten js-fade">Plumes</h2>
+                    <p class="product-category js-fade">ギターオーバードライブ</p>
+                    <p class="product-desc js-fade">
                         ”真空管をスクリーム”させるペダルをEQDの解釈で再度見直し、
                         3つのクリッピング回路を選べるユニークなオーバードライブ。
                         とても高いヘッドルームさえも得られる立体感の有る歪み。
                     </p>
-                    <div class="btn-wrapper">
+                    <div class="btn-wrapper js-fade">
                         <a href="#" class="btn btn--primary">詳細ページ→</a>
                     </div>
                 </div>
@@ -51,20 +56,20 @@
             <div class="container">
                 <div class="artist-visual">
                     <canvas id="sequence-gary"></canvas>
-                    <div class="artist-visual__bg-shape"></div>
+                    <div class="artist-visual__bg-shape js-fade"></div>
                     <img src="img/common/gary.png" alt="Gary" class="artist-visual__img">
-                    <h2 class="title-handwritten title-overlay">GARY</h2>
                 </div>
 
                 <div class="artist-info">
-                    <h3 class="artist-name">GARY</h3>
-                    <p class="artist-role">Guitarist / IDLES</p>
-                    <p class="artist-desc">
+                    <h3 class="artist-name js-fade">GARY</h3>
+                    <p class="artist-role js-fade">オートマチックパルスモジュレーションファズ<br>
+                        オーバードライブ</p>
+                    <p class="artist-desc js-fade">
                         アースクエイカーデバイセスが今回自信を持って紹介する新製品はGary（ゲイリー）。
                         このゲイリーはイギリスのバンド、IDLES（アイドルス）のギターリスト、
                         Lee Kiernanのシグネチャーペダルになります。
                     </p>
-                    <div class="btn-wrapper">
+                    <div class="btn-wrapper js-fade">
                         <a href="#" class="btn btn--secondary">詳細ページ→</a>
                     </div>
                 </div>
@@ -136,13 +141,13 @@
                     <img src="img/common/blandsp.png" alt="Handmade in Ohio">
                 </div>
                 
-                <div class="brand-text">
+                <div class="brand-text js-fade">
                     <p>
                         始まりは2004年、創業者ジェイミー・スティルマンのパンクなDIY精神からでした。
                         現在もEQDは、品質管理とインスピレーションを最優先し、
                         オハイオ州アクロンにてすべての工程を社員の手作業で丁寧に行っています。
                     </p>
-                    <div class="btn-wrapper">
+                    <div class="btn-wrapper js-fade">
                         <a href="#" class="btn btn--outline">詳細ページ →</a>
                     </div>
                 </div>
@@ -170,7 +175,7 @@
                     </a>
                 </div>
                 
-                <p class="onomato-desc">
+                <p class="onomato-desc js-fade">
                     エフェクターが生み出す多彩なサウンドを、
                     日本語特有のオノマトペ（擬音語・擬態語）に変換し、
                     タイポグラフィとして可視化している。
@@ -181,28 +186,32 @@
         </section>
     </main>
 
-    <footer class="footer bg-dark"data-header-svg="logo.svg">
+<footer class="footer" data-header-svg="logo.svg">
         <div class="container">
-            <nav class="footer-nav">
-                <ul class="footer-list-svg">
-                    <li><a href="#"><img src="img/typography/devices.svg" alt="Devices"></a></li>
-                    <li><a href="#"><img src="img/typography/artists.svg" alt="Artists"></a></li>
-                    <li><a href="#"><img src="img/typography/demo.svg" alt="Demo"></a></li>
-                    <li><a href="#"><img src="img/typography/brand.svg" alt="Brand"></a></li>
-                    <li><a href="#"><img src="img/typography/support.svg" alt="Support"></a></li>
-                    <li><a href="#"><img src="img/typography/dealers.svg" alt="Dealers"></a></li>
-                </ul>
+            
+            <div class="footer-top-logo">
+                <img src="img/common/spmainlogo.svg" alt="EarthQuaker Devices">
+            </div>
+
+            <nav class="footer-nav-grid">
+                <a href="#" class="footer-link item-devices"><img src="img/typography/devices.svg" alt="Devices"></a>
+                <a href="#" class="footer-link item-artists"><img src="img/typography/artists.svg" alt="Artists"></a>
+                <a href="#" class="footer-link item-brand"><img src="img/typography/brand.svg" alt="Brand"></a>     
+                <a href="#" class="footer-link item-demo"><img src="img/typography/demo.svg" alt="Demo"></a>
+                <a href="#" class="footer-link item-support"><img src="img/typography/support.svg" alt="Support"></a>
+                <a href="#" class="footer-link item-dealers"><img src="img/typography/dealers.svg" alt="Dealers"></a>
             </nav>
             
-            <div class="footer-info">
-                <div class="footer-logo">
-                    <img src="img/common/spfooterlogo.svg" alt="EarthQuaker Devices">
-                </div>
-                <div class="footer-social">
+            <div class="footer-bottom-info">
+                <p class="distributor-text">
+                    総輸入販売店<br>
+                    株式会社ヤマハミュージックジャパン
+                </p>
+                
+                <div class="footer-social-row">
                     <a href="#"><img src="img/common/youtube.icon.svg" alt="YouTube"></a>
                     <a href="#"><img src="img/common/instagram.icon.svg" alt="Instagram"></a>
-                </div>
-                <small class="copyright">総輸入販売店 株式会社ヤマハミュージックジャパン</small>
+                    </div>
             </div>
         </div>
     </footer>
