@@ -1,0 +1,488 @@
+@charset "UTF-8";
+
+/* =======================================================
+   1. 変数・ベース設定
+   ======================================================= */
+:root {
+    --color-bg: #fff;
+    --color-text: #1D1D1D;
+    --color-btn-bg: #1a1a1a;
+    --color-btn-text: #FFFFFF;
+    --color-bg-dark: #1a1a1a;
+    --sp-margin: 20px;
+    --section-gap: 100px;
+    --font-base: 'Inter', "Helvetica Neue", Arial, sans-serif;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* 横スクロールを完全に禁止 */
+    position: relative; /* 子要素の基準点にする */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-base);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+    font-size: 12px;
+    padding-bottom: 80px;
+}
+
+img { max-width: 100%; height: auto; vertical-align: bottom; }
+a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
+a:hover { opacity: 0.7; }
+
+.container {
+    width: 100%;
+    padding-left: var(--sp-margin);
+    padding-right: var(--sp-margin);
+    margin: 0 auto;
+    position: relative;
+}
+
+.section { margin-bottom: var(--section-gap); position: relative; }
+.section:last-child { margin-bottom: 0; }
+
+.bg-dark {
+    background-color: var(--color-bg-dark);
+    color: #FFFFFF;
+    padding-top: 80px; padding-bottom: 80px; margin-bottom: 0;
+}
+.bg-dark + .bg-dark { padding-top: 0; }
+
+.title-handwritten {
+    /* Interに戻す */
+    font-family: var(--font-base); 
+    
+    font-weight: 700; 
+    font-size: 2.5rem; 
+    margin-bottom: 1rem; 
+    line-height: 1.1;
+}
+
+/* ヘッダーの画像切り替えアニメーション */
+.header__current-section img {
+    transition: opacity 0.3s ease; /* 0.3秒かけて変化 */
+}
+
+
+/* JSで切り替える瞬間に opacity: 0 にするクラスを作って制御もできますが、
+   まずは上の transition だけで十分なめらかに見えるはずです */
+
+/* =======================================================
+   2. ボタン・中央寄せ設定
+   ======================================================= */
+/* ボタン自体は inline-flex なので、親要素で中央揃えにする */
+.btn-wrapper {
+    text-align: center;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 40px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background-color: var(--color-btn-bg);
+    color: var(--color-btn-text);
+}
+.btn--outline {
+    background: transparent;
+    border: 1px solid #FFF;
+    color: #FFF;
+}
+
+/* =======================================================
+   3. ヘッダー (下部固定)
+   ======================================================= */
+.header {
+    position: fixed; /* 画面に対して固定 */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #FFFFFF;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--sp-margin);
+    z-index: 9999; /* 最前面に */
+}
+
+.header__current-section img { height: 30px; width: auto; }
+
+.header__menu-btn {
+    background: var(--color-btn-bg);
+    color: var(--color-btn-text);
+    border: none;
+    font-family: var(--font-base);
+    font-weight: 700;
+    padding: 0 25px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* =======================================================
+   4. メインロゴ & FV
+   ======================================================= */
+.main-logo-container {
+    width: 100%;
+    padding: 20px var(--sp-margin) 0;
+    background-color: var(--color-bg);
+}
+.main-logo img { width: 100%; }
+
+.fv {
+    width: 100%; height: 60vh;
+    position: relative; overflow: hidden; background-color: var(--color-bg);
+}
+
+/* =======================================================
+   5. Product Pickup
+   ======================================================= */
+.product-visual { 
+    width: 100%; 
+    margin-bottom: 20px; 
+}
+#sequence-plumes { 
+    max-width: 100%; 
+    height: auto; 
+    display: block;
+    margin: 0 auto;
+}
+.product-info p { 
+    text-align: justify; 
+}
+
+/* =======================================================
+   6. Artist Feature (修正版)
+   ======================================================= */
+.artist-visual {
+    /* 親要素(container)の幅いっぱいにする（左右の余白はcontainerが持っています） */
+    width: 100%; 
+    
+    /* 余計なマージンはつけない */
+    margin-left: 0;
+    margin-right: 0;
+    
+    position: relative;
+    margin-bottom: 30px;
+}
+
+/* 画像の設定 */
+.artist-visual__img {
+    /* コンテナの幅に合わせて拡大縮小する */
+    width: 100%; 
+    height: auto; /* 比率を保つ */
+    display: block;
+}
+
+/* 連番画像のキャンバスも同様に */
+#sequence-gary {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+}
+
+/* カルーセルエリア全体 */
+.artist-carousel {
+    /* コンテナのpadding(20px)を無視して、画面右端まで広げる設定 */
+    width: calc(100% + 20px); 
+    margin-right: -20px; 
+    
+    height: 175px;
+    
+    /* ★ここをhiddenに戻すことで、サイト全体の横揺れが止まります */
+    /* hiddenでもSwiperの機能でちゃんと指でスクロールできます */
+    overflow: hidden; 
+    margin-top: 40px;
+    padding-bottom: 0;
+}
+
+/* スライド（カード）1枚の設定 */
+.swiper-slide.artist-card {
+    width: auto;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid #1a1a1a; 
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    
+    /* カード間の隙間 16px */
+    margin-right: 16px;
+}
+
+/* 最後のカードの右側には少し余白をもたせる（見切れ防止） */
+.swiper-slide:last-child {
+    margin-right: 20px;
+}
+
+/* MOREボタンも同様に */
+.swiper-slide.artist-card-more {
+    width: 104px;
+    height: 100%;
+    border: 1px solid #1D1D1D;
+    background: #1D1D1D;
+    box-sizing: border-box;
+    margin-right: 20px; /* 最後なので20px */
+}
+
+/* 画像設定 (104px x 104px) */
+.artist-card__img {
+    width: 104px;
+    height: 104px;
+    /* ★ここを変更：上下は維持しつつ、左右をautoにして中央寄せ */
+    margin: 0 auto 8px auto; 
+    flex-shrink: 0;
+}
+
+.artist-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+}
+
+/* 役職名 (12px) */
+.artist-card__role {
+    width: 100%; /* 左寄せにするため幅指定 */
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    text-align: left; /* 左寄せ */
+    line-height: 1;
+}
+
+/* アーティスト名 (16px) */
+.artist-card__name {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: left; /* 左寄せ */
+    font-family: var(--font-base);
+    white-space: nowrap; /* 名前を折り返さない場合 */
+}
+
+/* MOREボタンの中身 */
+.btn-more-slide {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+/* =======================================================
+   7. Brand & Onomato (黒背景)
+   ======================================================= */
+/* =======================================================
+   X. Crack Transition (地割れ演出)
+   ======================================================= */
+.crack-transition {
+    width: 100%;
+    
+    /* ★変更: 画面の高さいっぱいに広げる */
+    height: 100vh; 
+    
+    position: relative;
+    overflow: hidden;
+    line-height: 0;
+    
+    /* ★追加: 下のセクションとの隙間（白い線）を消すための重ね合わせ */
+    margin-bottom: -1px; 
+    
+    /* 必要なら上も少し重ねておく */
+    margin-top: -1px;
+}
+
+#sequence-crack {
+    width: 100%;
+    
+    /* ★変更: 高さを親要素(100vh)に合わせる */
+    height: 100%; 
+    
+    display: block;
+    margin: 0 auto;
+    
+    /* ★重要: 画像の比率を保ったまま、エリア全体を覆う（トリミングする） */
+    object-fit: cover; 
+}
+
+
+.brand-visual { margin-bottom: 30px; }
+.brand-visual img { width: 100%; filter: contrast(1.1); }
+.brand-text p { text-align: justify; }
+
+.onomato__logo { width: 200px; margin: 0 auto 40px; }
+.onomato__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+.onomato-item { display: block; transition: transform 0.2s; }
+.onomato-desc { font-size: 0.85rem; margin-top: 40px; text-align: justify; }
+
+/* =======================================================
+   8. フッター
+   ======================================================= */
+.footer { border-top: none; }
+.footer-nav { margin-bottom: 60px; }
+.footer-list-svg {
+    display: flex; flex-direction: column; align-items: center; gap: 30px; list-style: none; padding: 0;
+}
+.footer-list-svg li a { display: block; height: 40px; }
+.footer-list-svg li a img { height: 100%; width: auto; filter: invert(1); /* 白く反転 */ }
+
+.footer-info { text-align: center; }
+.footer-logo img { width: 150px; margin-bottom: 30px; filter: invert(1); }
+.footer-social { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+.footer-social img { width: 24px; filter: invert(1); }
+.copyright { display: block; font-size: 0.7rem; color: #888; margin-top: 20px; }
+
+
+/* =======================================================
+   9. Global Menu (全画面メニュー) - 修正版
+   ======================================================= */
+.global-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #1a1a1a; /* 黒背景 */
+    z-index: 5000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.global-menu.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.global-menu__inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; ← これをやめて上寄せにする */
+    justify-content: flex-start;
+    align-items: center;
+    padding: 60px 20px; /* 上と左右に余白 */
+    position: relative; /* SNSアイコンの配置基準 */
+}
+
+/* ① ロゴのスタイル */
+.global-menu__logo {
+    margin-bottom: 30px;
+    width: 80%; /* 画面幅に合わせて調整 */
+    max-width: 250px;
+}
+.global-menu__logo img {
+    width: 100%;
+    filter: invert(1); /* 白く反転 */
+}
+
+/* ② 検索欄のスタイル */
+.global-menu__search {
+    width: 90%; /* 横幅いっぱいより少し狭く */
+    max-width: 300px;
+    position: relative;
+    border-bottom: 1px solid #fff; /* 下線 */
+    margin-bottom: 50px; /* リストとの間隔 */
+}
+
+.global-menu__search .search-icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    filter: invert(1); /* 白く反転 */
+}
+
+.global-menu__search input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 10px 10px 10px 30px; /* アイコンの分だけ左を空ける */
+    font-size: 16px;
+    outline: none; /* 入力時の枠線を消す */
+}
+.global-menu__search input::placeholder {
+    color: #ccc; /* プレースホルダーの色 */
+}
+
+/* メニューリスト（既存のスタイルを調整） */
+.global-menu__list {
+    list-style: none;
+    text-align: center;
+    /* margin-bottom: 40px; ← 不要なので削除 */
+    width: 100%;
+}
+
+.global-menu__list li {
+    margin-bottom: 25px; /* 間隔を少し狭めに調整 */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.4s;
+}
+
+.global-menu.is-active .global-menu__list li {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* アニメーションの遅延設定（そのまま） */
+.global-menu.is-active .global-menu__list li:nth-child(1) { transition-delay: 0.1s; }
+.global-menu.is-active .global-menu__list li:nth-child(2) { transition-delay: 0.2s; }
+.global-menu.is-active .global-menu__list li:nth-child(3) { transition-delay: 0.3s; }
+.global-menu.is-active .global-menu__list li:nth-child(4) { transition-delay: 0.4s; }
+.global-menu.is-active .global-menu__list li:nth-child(5) { transition-delay: 0.5s; }
+.global-menu.is-active .global-menu__list li:nth-child(6) { transition-delay: 0.6s; }
+
+.global-menu__list li a img {
+    height: 32px; /* 少し小さめに調整 */
+    filter: invert(1);
+}
+
+/* ③ SNSアイコン（右下固定） */
+.global-menu__social-fixed {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column; /* 縦並び */
+    gap: 25px; /* アイコン間の間隔 */
+}
+.global-menu__social-fixed img {
+    width: 30px;
+    filter: invert(1); /* 白く反転 */
+    transition: opacity 0.3s;
+}
+.global-menu__social-fixed a:hover img {
+    opacity: 0.7;
+}
+
+/* メニューが開いている時のボタンの変化（そのまま） */
+.header__menu-btn.is-active {
+    background-color: #fff;
+    color: #1a1a1a;
+}

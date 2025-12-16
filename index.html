@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EarthQuaker Devices | The Interface of Inspiration</title>
+
+    <link rel="stylesheet" href="css/destyle.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <main>
+        <div class="main-logo-container">
+            <h1 class="main-logo">
+                <img src="img/common/spmainlogo.svg" alt="EarthQuaker Devices">
+            </h1>
+        </div>
+
+        <section class="fv" id="fv-canvas-container" data-header-svg="devices.svg">
+            <div class="fv__overlay"></div>
+        </section>
+
+        <section class="section product-pickup" data-header-svg="devices.svg">
+            <div class="container">
+                <div class="product-visual">
+                    <canvas id="sequence-plumes"></canvas>
+                </div>
+                
+                <div class="product-info">
+                    <h2 class="title-handwritten">Plumes</h2>
+                    <p class="product-category">ギターオーバードライブ</p>
+                    <p class="product-desc">
+                        ”真空管をスクリーム”させるペダルをEQDの解釈で再度見直し、
+                        3つのクリッピング回路を選べるユニークなオーバードライブ。
+                        とても高いヘッドルームさえも得られる立体感の有る歪み。
+                    </p>
+                    <div class="btn-wrapper">
+                        <a href="#" class="btn btn--primary">詳細ページ→</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section artist-feature"data-header-svg="artists.svg">
+            <div class="container">
+                <div class="artist-visual">
+                    <canvas id="sequence-gary"></canvas>
+                    <div class="artist-visual__bg-shape"></div>
+                    <img src="img/common/gary.png" alt="Gary" class="artist-visual__img">
+                    <h2 class="title-handwritten title-overlay">GARY</h2>
+                </div>
+
+                <div class="artist-info">
+                    <h3 class="artist-name">GARY</h3>
+                    <p class="artist-role">Guitarist / IDLES</p>
+                    <p class="artist-desc">
+                        アースクエイカーデバイセスが今回自信を持って紹介する新製品はGary（ゲイリー）。
+                        このゲイリーはイギリスのバンド、IDLES（アイドルス）のギターリスト、
+                        Lee Kiernanのシグネチャーペダルになります。
+                    </p>
+                    <div class="btn-wrapper">
+                        <a href="#" class="btn btn--secondary">詳細ページ→</a>
+                    </div>
+                </div>
+                
+                <div class="swiper artist-carousel">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide artist-card">
+                            <div class="artist-card__img">
+                                <img src="img/artists/nakao.webp" alt="中尾憲太郎">
+                            </div>
+                            <p class="artist-card__role">Bassist</p>
+                            <h3 class="artist-card__name">中尾憲太郎</h3>
+                        </div>
+                        <div class="swiper-slide artist-card">
+                            <div class="artist-card__img">
+                                <img src="img/artists/tabuchi.webp" alt="田淵ひさ子">
+                            </div>
+                            <p class="artist-card__role">Guitarist</p>
+                            <h3 class="artist-card__name">田淵ひさ子</h3>
+                        </div>
+                        <div class="swiper-slide artist-card">
+                            <div class="artist-card__img">
+                                <img src="img/artists/asai.webp" alt="浅井健一">
+                            </div>
+                            <p class="artist-card__role">Guitarist</p>
+                            <h3 class="artist-card__name">浅井健一</h3>
+                        </div>
+                        <div class="swiper-slide artist-card">
+                            <div class="artist-card__img">
+                                <img src="img/artists/goto.webp" alt="後藤正文">
+                            </div>
+                            <p class="artist-card__role">Guitarist</p>
+                            <h3 class="artist-card__name">後藤正文</h3>
+                        </div>
+                        <div class="swiper-slide artist-card">
+                            <div class="artist-card__img">
+                                <img src="img/artists/hinata.webp" alt="日向秀和">
+                            </div>
+                            <p class="artist-card__role">Bassist</p>
+                            <h3 class="artist-card__name">日向秀和</h3>
+                        </div>
+                        <div class="swiper-slide artist-card">
+                            <div class="artist-card__img">
+                                <img src="img/artists/sekine.webp" alt="関根史織">
+                            </div>
+                            <p class="artist-card__role">Bassist</p>
+                            <h3 class="artist-card__name">関根史織</h3>
+                        </div>
+
+                        <div class="swiper-slide artist-card-more">
+                            <a href="#" class="btn-more-slide">
+                                <span class="more-text">MORE</span>
+                                <span class="more-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section crack-transition" style="background-color: #1a1a1a;">
+            <canvas id="sequence-crack"></canvas>
+        </section>
+
+        <section class="section brand-philosophy bg-dark"data-header-svg="brand.svg">
+            <div class="container">
+                <div class="brand-visual">
+                    <img src="img/common/blandsp.png" alt="Handmade in Ohio">
+                </div>
+                
+                <div class="brand-text">
+                    <p>
+                        始まりは2004年、創業者ジェイミー・スティルマンのパンクなDIY精神からでした。
+                        現在もEQDは、品質管理とインスピレーションを最優先し、
+                        オハイオ州アクロンにてすべての工程を社員の手作業で丁寧に行っています。
+                    </p>
+                    <div class="btn-wrapper">
+                        <a href="#" class="btn btn--outline">詳細ページ →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section onomato bg-dark"data-header-svg="onomatoPedal-Logo_Light.svg">
+            <div class="container">
+                <div class="onomato__logo">
+                    <img src="img/typography/onomatoPedal-Logo_Light.svg" alt="おのとまぺだる">
+                </div>
+                
+                <div class="onomato__grid">
+                    <a href="https://onomatopedal.com" target="_blank" class="onomato-item item-bukabuka">
+                        <img src="img/onomatopedal/buka-buka.gif" alt="ぶかぶか">
+                    </a>
+                    <a href="https://onomatopedal.com" target="_blank" class="onomato-item item-pikapika">
+                        <img src="img/onomatopedal/pikapika.gif" alt="ぴかぴか">
+                    </a>
+                    <a href="https://onomatopedal.com" target="_blank" class="onomato-item item-gwongwon">
+                        <img src="img/onomatopedal/gwon-gwon.gif" alt="ぐわんぐわん">
+                    </a>
+                    <a href="https://onomatopedal.com" target="_blank" class="onomato-item item-ujauja">
+                        <img src="img/onomatopedal/ujauja.gif" alt="うじゃうじゃ">
+                    </a>
+                </div>
+                
+                <p class="onomato-desc">
+                    エフェクターが生み出す多彩なサウンドを、
+                    日本語特有のオノマトペ（擬音語・擬態語）に変換し、
+                    タイポグラフィとして可視化している。
+                    ユーザーはペダルを踏む動作と連動したアニメーションを通じて、
+                    聴覚と視覚の両面からEQDの独創的な世界観を体験できる。
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer bg-dark"data-header-svg="logo.svg">
+        <div class="container">
+            <nav class="footer-nav">
+                <ul class="footer-list-svg">
+                    <li><a href="#"><img src="img/typography/devices.svg" alt="Devices"></a></li>
+                    <li><a href="#"><img src="img/typography/artists.svg" alt="Artists"></a></li>
+                    <li><a href="#"><img src="img/typography/demo.svg" alt="Demo"></a></li>
+                    <li><a href="#"><img src="img/typography/brand.svg" alt="Brand"></a></li>
+                    <li><a href="#"><img src="img/typography/support.svg" alt="Support"></a></li>
+                    <li><a href="#"><img src="img/typography/dealers.svg" alt="Dealers"></a></li>
+                </ul>
+            </nav>
+            
+            <div class="footer-info">
+                <div class="footer-logo">
+                    <img src="img/common/spfooterlogo.svg" alt="EarthQuaker Devices">
+                </div>
+                <div class="footer-social">
+                    <a href="#"><img src="img/common/youtube.icon.svg" alt="YouTube"></a>
+                    <a href="#"><img src="img/common/instagram.icon.svg" alt="Instagram"></a>
+                </div>
+                <small class="copyright">総輸入販売店 株式会社ヤマハミュージックジャパン</small>
+            </div>
+        </div>
+    </footer>
+
+    <nav class="global-menu" id="global-menu">
+    <div class="global-menu__inner">
+        <div class="global-menu__logo">
+             <img src="img/common/spmainlogo.svg" alt="EarthQuaker Devices">
+        </div>
+
+        <div class="global-menu__search">
+            <img src="img/common/search.png" alt="検索" class="search-icon">
+            <input type="text" placeholder="キーワード検索">
+        </div>
+
+        <ul class="global-menu__list">
+            <li><a href="#"><img src="img/typography/devices.svg" alt="Devices"></a></li>
+            <li><a href="#"><img src="img/typography/artists.svg" alt="Artists"></a></li>
+            <li><a href="#"><img src="img/typography/demo.svg" alt="Demo"></a></li>
+            <li><a href="#"><img src="img/typography/brand.svg" alt="Brand"></a></li>
+            <li><a href="#"><img src="img/typography/support.svg" alt="Support"></a></li>
+            <li><a href="#"><img src="img/typography/dealers.svg" alt="Dealers"></a></li>
+        </ul>
+        
+        <div class="global-menu__social-fixed">
+            <a href="#"><img src="img/common/youtube.icon.svg" alt="YouTube"></a>
+            <a href="#"><img src="img/common/instagram.icon.svg" alt="Instagram"></a>
+        </div>
+    </div>
+</nav>
+
+    <header class="header">
+        <div class="header__current-section">
+            <img src="img/text/devices.svg" alt="Devices">
+        </div>
+        <button class="header__menu-btn">
+            Menu
+        </button>
+    </header>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
