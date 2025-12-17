@@ -21,14 +21,40 @@
     </div>
 
     <main>
-        <div class="main-logo-container">
-            <h1 class="main-logo">
-                <img src="img/common/spmainlogo.svg" alt="EarthQuaker Devices">
-            </h1>
-        </div>
+        <section class="fv-container">
+            <div class="main-logo-container">
+                <h1 class="main-logo">
+                    <img src="img/common/spmainlogo.svg" alt="EarthQuaker Devices">
+                </h1>
+            </div>
+            
+            <div id="fv-canvas-container">
+                <div class="fv__overlay"></div>
+            </div>
 
-        <section class="fv" id="fv-canvas-container" data-header-svg="devices.svg">
-            <div class="fv__overlay"></div>
+            <div id="fv-info-panel" class="fv-info">
+                
+                <div class="fv-info__default is-active">
+                    <p class="fv-info__msg">TAP A PEDAL</p>
+                    <p class="fv-info__sub">気になるペダルをタップして<br>サウンドをチェック</p>
+                </div>
+
+                <div class="fv-info__content">
+                    <h2 class="fv-info__name" id="info-name">Pedal Name</h2>
+                    <p class="fv-info__cat" id="info-category">Overdrive</p>
+                    
+                    <div class="fv-info__actions">
+                        <button id="btn-play-demo" class="btn-circle">
+                            <span class="icon-play">▶</span>
+                            <span class="icon-stop" style="display:none;">■</span>
+                        </button>
+                        
+                        <a href="#" id="btn-detail-link" class="btn btn--primary btn--sm">
+                            詳細ページへ
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section class="section product-pickup" data-header-svg="devices.svg">

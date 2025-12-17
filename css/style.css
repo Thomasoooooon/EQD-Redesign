@@ -133,18 +133,168 @@ a:hover { opacity: 0.7; }
 }
 
 /* =======================================================
-   4. メインロゴ & FV
+   4. FV (物理演算 + 情報パネル) - インタラクティブ版
    ======================================================= */
-.main-logo-container {
+
+/* FV全体を画面いっぱいに固定 */
+.fv-container {
     width: 100%;
-    padding: 20px var(--sp-margin) 0;
+    height: 100vh; /* 画面の高さ100% */
+    display: flex;
+    flex-direction: column; /* 上下に並べる */
+    overflow: hidden;
+    position: relative;
     background-color: var(--color-bg);
 }
-.main-logo img { width: 100%; }
 
-.fv {
-    width: 100%; height: 60vh;
-    position: relative; overflow: hidden; background-color: var(--color-bg);
+/* 上：物理演算エリア (高さ60%) */
+#fv-canvas-container {
+    width: 100%;
+    flex: 6; /* 比率 6 */
+    position: relative;
+    overflow: hidden;
+    /* 境界線をつけるなら */
+    border-bottom: 1px solid #ddd;
+}
+
+/* 下：情報パネルエリア (高さ40%) */
+.fv-info {
+    width: 100%;
+    flex: 4; /* 比率 4 */
+    background-color: #fff; /* 白背景 */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* デフォルト表示とコンテンツの切り替え */
+.fv-info__default,
+.fv-info__content {
+    display: none; /* 基本は非表示 */
+    width: 100%;
+    animation: fadeIn 0.6s ease;
+}
+.fv-info__default.is-active,
+.fv-info__content.is-active {
+    display: block; /* is-activeがついたら表示 */
+}
+
+/* テキストスタイル */
+.fv-info__msg {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    font-family: var(--font-base);
+}
+.fv-info__sub {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.5;
+}
+
+.fv-info__name {
+    font-family: serif; /* ここはあえて雰囲気変えてもOK */
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.1;
+}
+.fv-info__cat {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* アクションボタン周り */
+.fv-info__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 再生ボタン（丸型） */
+.btn-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.btn-circle:active {
+    transform: scale(0.95);
+}
+
+/* 小さめの詳細ボタン */
+.btn--sm {
+    padding: 10px 24px;
+    font-size: 0.85rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 1;}
+}
+
+
+/* =======================================================
+   メインビジュアル調整 (ロゴ全幅・位置・パネル位置)
+   ======================================================= */
+
+/* 1. ロゴの位置とサイズ調整 */
+.fv-container {
+    position: relative;
+}
+
+.main-logo-container {
+    position: absolute;
+    top: 128px;  /* 上から128px */
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    pointer-events: none;
+    
+    /* ★変更: 左右に20pxの余白を持たせて、画面いっぱいにする */
+    padding: 0 20px; 
+    box-sizing: border-box; /* paddingを含めて幅100%にする設定 */
+    text-align: center;
+}
+
+.main-logo img {
+    /* ★変更: 親要素(paddingを除いたエリア)いっぱいに広げる */
+    width: 100%; 
+    height: auto;
+    max-width: 100%; /* 念のため */
+}
+
+/* 2. エフェクター名のフォント修正（前回と同じ） */
+.fv-info__name {
+    font-family: var(--font-base); 
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.1;
+}
+
+/* 3. 情報パネルの位置調整 (コンテンツ ＆ デフォルト両方) */
+/* ★変更: .fv-info__default.is-active も対象に追加しました */
+.fv-info__content.is-active,
+.fv-info__default.is-active {
+    display: block;
+    transform: translateY(-48px); /* 上に48px移動 */
 }
 
 /* =======================================================

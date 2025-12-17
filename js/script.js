@@ -1,17 +1,30 @@
 // ==============================================
-// 1. Matter.js (物理演算) & Opening Animation
+// 1. Matter.js (物理演算 & インタラクティブ)
 // ==============================================
 const container = document.getElementById('fv-canvas-container');
 
+// ★ペダルのデータリスト
+const pedalDataList = [
+    { id: 'fv01', name: 'Plumes', category: 'Overdrive', sound: 'audio/demo_plumes.mp3', link: '#', texture: 'img/fv-parts/fv01.png' },
+    { id: 'fv02', name: 'Afterneath', category: 'Reverb', sound: 'audio/demo_afterneath.mp3', link: '#', texture: 'img/fv-parts/fv02.png' },
+    { id: 'fv03', name: 'Hizumitas', category: 'Fuzz', sound: 'audio/demo_hizumitas.mp3', link: '#', texture: 'img/fv-parts/fv03.png' },
+    // 必要に応じて追加してください
+];
+
+// 音源再生用の変数
+let currentAudio = null;
+let isPlaying = false;
+
 if (container) {
-    // --- Matter.js の準備 (まだ動かしません) ---
     const Engine = Matter.Engine,
           Render = Matter.Render,
           Runner = Matter.Runner,
           Bodies = Matter.Bodies,
           Composite = Matter.Composite,
           Mouse = Matter.Mouse,
-          MouseConstraint = Matter.MouseConstraint;
+          MouseConstraint = Matter.MouseConstraint,
+          Events = Matter.Events,
+          Query = Matter.Query;
 
     const engine = Engine.create();
     const world = engine.world;
@@ -24,7 +37,7 @@ if (container) {
         options: {
             width: width,
             height: height,
-            background: 'transparent', 
+            background: 'transparent',
             wireframes: false
         }
     });
@@ -35,19 +48,15 @@ if (container) {
     const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     Composite.add(world, [ground, leftWall, rightWall]);
 
-    // マウス操作
-    const mouse = Mouse.create(render.canvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: { stiffness: 0.2, render: { visible: false } }
-    });
-    Composite.add(world, mouseConstraint);
+    // 物体追加関数
+    function addFallingObject(x, y, dataId, scale = 1) {
+        const data = pedalDataList.find(item => item.id === dataId);
+        const textureUrl = data ? data.texture : 'img/fv-parts/fv01.png';
 
-    // パーツ追加関数
-    function addFallingObject(x, y, textureUrl, scale = 1) {
         const body = Bodies.circle(x, y, 40 * scale, { 
             restitution: 0.6, 
             friction: 0.1,
+            plugin: { pedalData: data },
             render: {
                 sprite: { texture: textureUrl, xScale: scale, yScale: scale }
             }
@@ -55,78 +64,165 @@ if (container) {
         Composite.add(world, body);
     }
 
-    // パーツの準備 (まだ落としません。空中にセットだけします)
-    addFallingObject(width * 0.4, -100, 'img/fv-parts/fv01.png', 0.8);
-    addFallingObject(width * 0.6, -200, 'img/fv-parts/fv02.png', 0.8);
-    addFallingObject(width * 0.2, -300, 'img/fv-parts/fv03.png', 0.5);
-    addFallingObject(width * 0.8, -400, 'img/fv-parts/fv04.png', 0.6); 
-    addFallingObject(width * 0.5, -500, 'img/fv-parts/fv05.png', 0.7);
-    addFallingObject(width * 0.4, -100, 'img/fv-parts/fv06.png', 0.8);
-    addFallingObject(width * 0.6, -200, 'img/fv-parts/fv07.png', 0.8);
-    addFallingObject(width * 0.2, -300, 'img/fv-parts/fv08.png', 0.5);
-    addFallingObject(width * 0.8, -400, 'img/fv-parts/fv09.png', 0.6); 
-    addFallingObject(width * 0.5, -500, 'img/fv-parts/fv10.png', 0.7);
-    addFallingObject(width * 0.4, -100, 'img/fv-parts/fv11.png', 0.8);
-    addFallingObject(width * 0.6, -200, 'img/fv-parts/fv12.png', 0.8);
-    addFallingObject(width * 0.2, -300, 'img/fv-parts/fv13.png', 0.5);
-    addFallingObject(width * 0.8, -400, 'img/fv-parts/fv14.png', 0.6); 
-    addFallingObject(width * 0.5, -500, 'img/fv-parts/fv15.png', 0.7);
-    addFallingObject(width * 0.5, -500, 'img/fv-parts/fv16.png', 0.7);
+    // 物体の投入
+    addFallingObject(width * 0.4, -100, 'fv01', 0.8);
+    addFallingObject(width * 0.6, -200, 'fv02', 0.8);
+    addFallingObject(width * 0.2, -300, 'fv03', 0.5);
+    addFallingObject(width * 0.8, -400, 'fv01', 0.6); 
+    addFallingObject(width * 0.5, -500, 'fv02', 0.7);
 
+    // マウス操作 & クリック判定
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: { stiffness: 0.2, render: { visible: false } }
+    });
+    Composite.add(world, mouseConstraint);
 
-    // ★ここからオープニングの制御
-    const overlay = document.getElementById('opening-overlay');
-    const video = document.getElementById('opening-video');
+    Events.on(mouseConstraint, 'mousedown', function(event) {
+        const mousePosition = event.mouse.position;
+        const bodies = Composite.allBodies(world);
+        const clickedBodies = Query.point(bodies, mousePosition);
 
-    // 物理演算をスタートさせる関数
-    function startSimulation() {
-        Render.run(render);
-        const runner = Runner.create();
+        if (clickedBodies.length > 0) {
+            const body = clickedBodies[0];
+            if (body.plugin && body.plugin.pedalData) {
+                updateInfoPanel(body.plugin.pedalData);
+            }
+        }
+    });
+
+    Render.run(render);
+    const runner = Runner.create();
+    
+    // オープニング後に実行する関数を定義
+    window.startPhysics = function() {
         Runner.run(runner, engine);
+    };
+}
+
+
+// ==============================================
+// ★情報パネルの制御 & 音声再生
+// ==============================================
+const defaultPanel = document.querySelector('.fv-info__default');
+const contentPanel = document.querySelector('.fv-info__content');
+const nameEl = document.getElementById('info-name');
+const catEl = document.getElementById('info-category');
+const linkBtn = document.getElementById('btn-detail-link');
+const playBtn = document.getElementById('btn-play-demo');
+const iconPlay = document.querySelector('.icon-play');
+const iconStop = document.querySelector('.icon-stop');
+
+function updateInfoPanel(data) {
+    if (!data) return;
+
+    nameEl.textContent = data.name;
+    catEl.textContent = data.category;
+    linkBtn.href = data.link;
+
+    if (currentAudio) {
+        currentAudio.pause();
+        isPlaying = false;
+        updatePlayIcon();
+    }
+    if (data.sound) {
+        currentAudio = new Audio(data.sound);
+        currentAudio.onended = () => {
+            isPlaying = false;
+            updatePlayIcon();
+        };
+    } else {
+        currentAudio = null;
     }
 
-    if (overlay && video) {
-        // 1. 最初はスクロール禁止にする
-        document.body.style.overflow = 'hidden';
-
-        // 2. 動画を再生 (スマホの省電力モード対策でcatchを入れる)
-        video.play().catch(e => console.log("自動再生がブロックされました:", e));
-
-        // 3. 動画が終わったら実行
-        video.addEventListener('ended', () => {
-            // フェードアウト開始
-            overlay.classList.add('is-hidden');
-            
-            // スクロール解禁
-            document.body.style.overflow = '';
-
-            // 物理演算スタート！
-            startSimulation();
-
-            // フェードアウトが終わった頃(1秒後)に要素を完全に消す
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 1000);
-        });
-
-    } else {
-        // 動画がない場合(開発中など)はすぐにスタート
-        startSimulation();
+    if (defaultPanel) defaultPanel.classList.remove('is-active');
+    if (contentPanel) {
+        contentPanel.classList.remove('is-active');
+        setTimeout(() => {
+            contentPanel.classList.add('is-active');
+        }, 10);
     }
 }
 
-// ==============================================
-// 2. GSAP Sequence (連番アニメーション) - 修正版
-// ==============================================
+if (playBtn) {
+    playBtn.addEventListener('click', () => {
+        if (!currentAudio) {
+            alert("デモ音源がありません");
+            return;
+        }
+        if (isPlaying) {
+            currentAudio.pause();
+            isPlaying = false;
+        } else {
+            currentAudio.play();
+            isPlaying = true;
+        }
+        updatePlayIcon();
+    });
+}
 
-// ★修正点：第5引数 scrollDistance を追加しました
+function updatePlayIcon() {
+    if (iconPlay && iconStop) {
+        if (isPlaying) {
+            iconPlay.style.display = 'none';
+            iconStop.style.display = 'inline';
+        } else {
+            iconPlay.style.display = 'inline';
+            iconStop.style.display = 'none';
+        }
+    }
+}
+
+
+// ==============================================
+// ★オープニング動画の制御 (修正済み)
+// ==============================================
+const overlay = document.getElementById('opening-overlay');
+const video = document.getElementById('opening-video');
+
+if (overlay && video) {
+    // 1. 最初はスクロール禁止
+    document.body.style.overflow = 'hidden';
+
+    // 2. 動画再生
+    video.play().catch(e => console.log("自動再生ブロック:", e));
+
+    // 3. 動画終了時の処理（★ここをコメントアウトから復活させました！）
+    video.addEventListener('ended', () => {
+        // フェードアウト
+        overlay.classList.add('is-hidden');
+        
+        // スクロール解禁
+        document.body.style.overflow = '';
+        
+        // 物理演算スタート
+        if (window.startPhysics) {
+            window.startPhysics();
+        }
+
+        // 要素を完全に消す
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            // ★重要: レイアウトが変わった可能性があるのでScrollTriggerを更新
+            ScrollTrigger.refresh();
+        }, 1000);
+    });
+} else {
+    // 動画がない場合は即スタート
+    if (window.startPhysics) window.startPhysics();
+}
+
+
+// ==============================================
+// 2. GSAP Sequence (連番アニメーション)
+// ==============================================
 function setupSequence(canvasId, folderName, frameCount, scrollStart = "center center", scrollDistance = 1500) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return; 
 
     const context = canvas.getContext("2d");
     
-    // 画像生成ルール (0001.webp)
     const currentFrame = index => {
         const number = (index + 1).toString().padStart(4, '0');
         return `img/sequence/${folderName}/${number}.webp`;
@@ -135,7 +231,6 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
     const images = [];
     const seq = { frame: 0 };
 
-    // 画像プリロード
     for (let i = 0; i < frameCount; i++) {
         const img = new Image();
         img.src = currentFrame(i);
@@ -144,9 +239,7 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
 
     function render() {
         const img = images[seq.frame];
-        // 読み込み完了＆画像破損チェック
         if (img && img.complete && img.naturalWidth !== 0) {
-            // サイズ自動調整
             if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
                 canvas.width = img.naturalWidth;
                 canvas.height = img.naturalHeight;
@@ -164,13 +257,8 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
         ease: "none",
         scrollTrigger: {
             trigger: canvas.closest('.product-visual, .artist-visual, .crack-transition'),
-            
-            // 引数で受け取った位置を使う
             start: scrollStart, 
-            
-            // 引数で受け取った距離を使う
             end: `+=${scrollDistance}`,
-            
             pin: true,
             scrub: 0.5,
             markers: false
@@ -179,8 +267,7 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
     });
 }
 
-
-// ★ユーザー設定（枚数や速度の設定はそのまま残しています）
+// 実行設定
 setupSequence("sequence-plumes", "plumes", 40, "center center", 1500);
 setupSequence("sequence-gary",   "gary",   70, "center 60%", 3000);
 setupSequence("sequence-crack",  "crack",  40, "center center", 1500);
@@ -261,22 +348,16 @@ const fadeElements = document.querySelectorAll('.js-fade');
 
 fadeElements.forEach(element => {
     gsap.fromTo(element, 
-        // 最初の状態（透明で、少し下にいる）
-        { 
-            opacity: 0, 
-            y: 30 
-        }, 
-        // アニメーション後の状態（不透明で、元の位置に戻る）
+        { opacity: 0, y: 30 }, 
         {
             opacity: 1, 
             y: 0, 
-            duration: 1,    // 1秒かけて
-            ease: "power2.out", // 自然な減速
+            duration: 1,
+            ease: "power2.out", 
             scrollTrigger: {
                 trigger: element,
-                start: "top 85%", // 画面の下の方(85%)に来たら開始
-                // markers: true, // 動きを確認したい時はコメント外す
-                toggleActions: "play none none reverse" // 上に戻ったらまた消える設定（好みで "play none none none" にすれば一度きり）
+                start: "top 85%",
+                toggleActions: "play none none reverse" 
             }
         }
     );
