@@ -3,13 +3,31 @@
 // ==============================================
 const container = document.getElementById('fv-canvas-container');
 
-// ★ペダルのデータリスト
+// ★全18個のデータをここで管理（後からここを書き換えればOK！）
+// texture: 画像のパス
 const pedalDataList = [
     { id: 'fv01', name: 'Plumes', category: 'Overdrive', sound: 'audio/demo_plumes.mp3', link: '#', texture: 'img/fv-parts/fv01.png' },
-    { id: 'fv02', name: 'Afterneath', category: 'Reverb', sound: 'audio/demo_afterneath.mp3', link: '#', texture: 'img/fv-parts/fv02.png' },
-    { id: 'fv03', name: 'Hizumitas', category: 'Fuzz', sound: 'audio/demo_hizumitas.mp3', link: '#', texture: 'img/fv-parts/fv03.png' },
-    // 必要に応じて追加してください
+    { id: 'fv02', name: 'Afterneath', category: 'Reverb',    sound: 'audio/demo_afterneath.mp3', link: '#', texture: 'img/fv-parts/fv02.png' },
+    { id: 'fv03', name: 'Hizumitas',  category: 'Fuzz',      sound: 'audio/demo_hizumitas.mp3',  link: '#', texture: 'img/fv-parts/fv03.png' },
+    { id: 'fv04', name: 'Pedal 04',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv04.png' },
+    { id: 'fv05', name: 'Pedal 05',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv05.png' },
+    { id: 'fv06', name: 'Pedal 06',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv06.png' },
+    { id: 'fv07', name: 'Pedal 07',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv07.png' },
+    { id: 'fv08', name: 'Pedal 08',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv08.png' },
+    { id: 'fv09', name: 'Pedal 09',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv09.png' },
+    { id: 'fv10', name: 'Pedal 10',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv10.png' },
+    { id: 'fv11', name: 'Pedal 11',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv11.png' },
+    { id: 'fv12', name: 'Pedal 12',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv12.png' },
+    { id: 'fv13', name: 'Pedal 13',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv13.png' },
+    { id: 'fv14', name: 'Pedal 14',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv14.png' },
+    { id: 'fv15', name: 'Pedal 15',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv15.png' },
+    { id: 'fv16', name: 'Pedal 16',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv16.png' },
+    { id: 'fv17', name: 'Pedal 17',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv17.png' },
+    { id: 'fv18', name: 'Pedal 18',   category: 'Category',  sound: '', link: '#', texture: 'img/fv-parts/fv18.png' },
 ];
+
+// 共通サイズ設定 (0.6倍)
+const PEDAL_SCALE = 0.6;
 
 // 音源再生用の変数
 let currentAudio = null;
@@ -48,28 +66,37 @@ if (container) {
     const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     Composite.add(world, [ground, leftWall, rightWall]);
 
+
     // 物体追加関数
-    function addFallingObject(x, y, dataId, scale = 1) {
+    function addFallingObject(x, y, dataId, scale) {
+        // IDを使ってリストからデータを検索
         const data = pedalDataList.find(item => item.id === dataId);
-        const textureUrl = data ? data.texture : 'img/fv-parts/fv01.png';
+        if (!data) return; // データがなければ何もしない
 
         const body = Bodies.circle(x, y, 40 * scale, { 
             restitution: 0.6, 
             friction: 0.1,
             plugin: { pedalData: data },
             render: {
-                sprite: { texture: textureUrl, xScale: scale, yScale: scale }
+                sprite: { texture: data.texture, xScale: scale, yScale: scale }
             }
         });
         Composite.add(world, body);
     }
 
-    // 物体の投入
-    addFallingObject(width * 0.4, -100, 'fv01', 0.8);
-    addFallingObject(width * 0.6, -200, 'fv02', 0.8);
-    addFallingObject(width * 0.2, -300, 'fv03', 0.5);
-    addFallingObject(width * 0.8, -400, 'fv01', 0.6); 
-    addFallingObject(width * 0.5, -500, 'fv02', 0.7);
+    // ★リストにある全データを投入
+    // 座標（どこから落ちるか）だけはスマホの幅に合わせて自動計算させています
+    // （座標まで手打ちにすると、スマホの機種によって左右が見切れてしまうため）
+    pedalDataList.forEach((pedal, index) => {
+        // 横位置: 画面の10%〜90%の範囲でランダム
+        const x = width * 0.1 + Math.random() * (width * 0.8);
+        
+        // 縦位置: 重ならないように少しずつ上へずらす (-100px 〜 -3000pxくらい)
+        const y = -100 - (index * 150) - (Math.random() * 100);
+
+        addFallingObject(x, y, pedal.id, PEDAL_SCALE);
+    });
+
 
     // マウス操作 & クリック判定
     const mouse = Mouse.create(render.canvas);
@@ -95,7 +122,7 @@ if (container) {
     Render.run(render);
     const runner = Runner.create();
     
-    // オープニング後に実行する関数を定義
+    // オープニング後に実行する関数
     window.startPhysics = function() {
         Runner.run(runner, engine);
     };
