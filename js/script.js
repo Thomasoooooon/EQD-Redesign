@@ -24,7 +24,26 @@ const pedalDataList = [
     { id: 'fv18', name: 'Plumes',   category: 'オーバードライブ',  sound: 'audio/fv18.mp3', link: 'https://www.earthquakerdevices.jp/plumes', texture: 'img/fv-parts/fv18.png' },
 ];
 
-const PEDAL_SCALE = 0.6;
+// ★関数: 画面幅に応じたスケールを計算する
+function getResponsiveScale(width) {
+    // コンソールに今の幅と判定を表示（F12のConsoleタブで確認できます）
+    console.log("現在の幅:", width);
+
+    if (width < 768) {
+        console.log("→ スマホサイズ適用");
+        return 0.8; 
+    } else if (width < 1024) {
+        console.log("→ タブレットサイズ適用");
+        // ★ここも一時的に大きくして、変化するか確認！
+        return 1.2; 
+    } else {
+        console.log("→ PCサイズ適用");
+        // ★まずは 2.5 (2.5倍) くらいで試すのがおすすめ！
+        // 10.0 だと大きすぎて画面から消えることがあります
+        return 1.6; 
+    }
+}
+
 let currentAudio = null;
 let isPlaying = false;
 
@@ -37,12 +56,16 @@ if (container) {
           Mouse = Matter.Mouse,
           MouseConstraint = Matter.MouseConstraint,
           Events = Matter.Events,
-          Query = Matter.Query;
+          Query = Matter.Query,
+          Body = Matter.Body; 
 
     const engine = Engine.create();
     const world = engine.world;
     const width = container.clientWidth;
     const height = container.clientHeight;
+
+    // 現在のスケールを初期化
+    let currentScale = getResponsiveScale(window.innerWidth);
 
     const render = Render.create({
         element: container,
@@ -55,16 +78,21 @@ if (container) {
         }
     });
 
-    const ground = Bodies.rectangle(width / 2, height + 60, width, 120, { isStatic: true, render: { visible: false } });
+    // 床と壁
+    const ground = Bodies.rectangle(width / 2, height + 60, 20000, 120, { isStatic: true, render: { visible: false } });
     const leftWall = Bodies.rectangle(-60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     Composite.add(world, [ground, leftWall, rightWall]);
 
+    // ペダル生成関数
     function addFallingObject(x, y, dataId, scale) {
         const data = pedalDataList.find(item => item.id === dataId);
         if (!data) return;
 
-        const body = Bodies.circle(x, y, 40 * scale, { 
+        // ★サイズ計算: 基本サイズ40px × スケール
+        const radius = 40 * scale;
+
+        const body = Bodies.circle(x, y, radius, { 
             restitution: 0.6, 
             friction: 0.1,
             plugin: { pedalData: data },
@@ -75,10 +103,11 @@ if (container) {
         Composite.add(world, body);
     }
 
+    // 初回生成
     pedalDataList.forEach((pedal, index) => {
         const x = width * 0.1 + Math.random() * (width * 0.8);
         const y = -100 - (index * 150) - (Math.random() * 100);
-        addFallingObject(x, y, pedal.id, PEDAL_SCALE);
+        addFallingObject(x, y, pedal.id, currentScale);
     });
 
     const mouse = Mouse.create(render.canvas);
@@ -99,6 +128,48 @@ if (container) {
                 updateInfoPanel(body.plugin.pedalData);
             }
         }
+    });
+
+    // ★リサイズ時の処理（壁の移動 ＆ ペダルの拡大縮小）
+    window.addEventListener('resize', () => {
+        const newWidth = container.clientWidth;
+        const newHeight = container.clientHeight;
+
+        // 1. 描画エリア更新
+        render.canvas.width = newWidth;
+        render.canvas.height = newHeight;
+        render.options.width = newWidth;
+        render.options.height = newHeight;
+
+        // 2. 新しいスケールを計算
+        const newScale = getResponsiveScale(window.innerWidth);
+
+        // 3. スケールが変わっていたら、全ペダルを拡大縮小する
+        if (newScale !== currentScale) {
+            // 倍率を計算 (例: 0.6 -> 1.0 なら 約1.66倍にする)
+            const scaleFactor = newScale / currentScale;
+
+            const allBodies = Composite.allBodies(world);
+            allBodies.forEach(body => {
+                // ペダルだけを対象にする（壁や床は除外）
+                if (body.plugin && body.plugin.pedalData) {
+                    // 物理演算上のサイズを変更
+                    Body.scale(body, scaleFactor, scaleFactor);
+                    
+                    // 見た目（画像）のサイズを変更
+                    body.render.sprite.xScale = newScale;
+                    body.render.sprite.yScale = newScale;
+                }
+            });
+
+            // 現在のスケールを更新
+            currentScale = newScale;
+        }
+
+        // 4. 壁と床の位置調整
+        Body.setPosition(rightWall, { x: newWidth + 60, y: newHeight / 2 });
+        Body.setPosition(leftWall, { x: -60, y: newHeight / 2 });
+        Body.setPosition(ground, { x: newWidth / 2, y: newHeight + 60 });
     });
 
     Render.run(render);
