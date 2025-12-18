@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+/* PCヘッダーはスマホでは隠す */
+.pc-header {
+    display: none;
+}
 /* =======================================================
    1. 変数・ベース設定
    ======================================================= */
@@ -58,13 +62,6 @@ a:hover { opacity: 0.7; }
 }
 .bg-dark + .bg-dark { padding-top: 0; }
 
-.title-handwritten {
-    font-family: var(--font-base);
-    font-weight: 700; 
-    font-size: 2.5rem; 
-    margin-bottom: 1rem; 
-    line-height: 1.1;
-}
 
 .header__current-section img {
     transition: opacity 0.3s ease;
@@ -191,12 +188,25 @@ a:hover { opacity: 0.7; }
 .product-visual { width: 100%; margin-bottom: 20px; }
 #sequence-plumes { max-width: 100%; height: auto; display: block; margin: 0 auto; }
 
-/* ★変更: pタグ用スタイル (16px, #666666) */
+.title-handwritten {
+    font-family: var(--font-base);
+    font-weight: 700; 
+    font-size: 2.5rem; 
+    margin-bottom: 1rem; 
+    line-height: 1.1;
+    
+    /* ★追加: 中央揃え */
+    text-align: center;
+}
+
 .product-category {
     font-size: 16px;
     color: #666666;
     margin-bottom: 16px;
     font-weight: 700;
+    
+    /* ★追加: 中央揃え */
+    text-align: center;
 }
 .product-desc { text-align: justify; margin-bottom: 40px; }
 
@@ -214,15 +224,24 @@ a:hover { opacity: 0.7; }
 .artist-visual__img.is-visible { opacity: 1; }
 #sequence-gary { width: 100%; height: auto; display: block; position: relative; z-index: 1; margin: 0 auto; }
 
-.artist-name { font-size: 2.0rem; font-weight: 700; margin-bottom: 10px; }
+.artist-name {
+    font-size: 2.0rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    
+    /* ★追加: 中央揃え */
+    text-align: center;
+}
 
-/* ★変更: pタグ用スタイル (16px, #666666) */
 .artist-role {
     font-size: 16px;
     color: #666666;
     margin-bottom: 40px;
     line-height: 1.5;
     font-weight: 700;
+    
+    /* ★追加: 中央揃え */
+    text-align: center;
 }
 .artist-desc { margin-bottom: 40px; }
 
@@ -499,4 +518,290 @@ a:hover { opacity: 0.7; }
 /* Swiperのドット（アクティブ時）の色変更 */
 .swiper-pagination-bullet-active {
     background: #1a1a1a;
+}
+
+
+/* =======================================================
+   10. PC Responsive (1024px以上)
+   ======================================================= */
+@media screen and (min-width: 1024px) {
+
+    /* --- ベース設定 --- */
+    :root {
+        --section-gap: 160px; /* セクション間隔を広げる */
+    }
+    
+    body {
+        font-size: 14px; /* 基本文字サイズアップ */
+        padding-bottom: 0; /* フッター下の余白リセット */
+    }
+
+    /* コンテナ幅制限と中央寄せ */
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    /* --- ヘッダー切り替え --- */
+    /* スマホ用パーツを消す */
+    .header,           /* 下部固定バー */
+    .header__menu-btn, /* メニューボタン */
+    .global-menu,      /* 全画面メニュー */
+    .main-logo-container /* FV内のロゴ(PCはヘッダーにあるので不要) */
+    {
+        display: none !important;
+    }
+
+    /* PCヘッダーを表示 */
+    .pc-header {
+        display: block; /* スマホではdisplay:noneにしておく必要があります(後述) */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background-color: #fff;
+        z-index: 9000;
+        border-bottom: 1px solid #eee;
+    }
+
+    .pc-header__inner {
+        max-width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+    }
+
+    .pc-header__logo img {
+        height: 40px;
+        width: auto;
+    }
+
+    .pc-header__list {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+    }
+    
+    .pc-header__list a {
+        font-family: serif; /* カンプの雰囲気に合わせて */
+        font-size: 16px;
+        color: #1D1D1D;
+        font-weight: bold;
+    }
+
+    .pc-header__search {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #ccc;
+    }
+    .pc-header__search input {
+        border: none;
+        outline: none;
+        padding: 5px;
+        font-size: 14px;
+        width: 150px;
+    }
+    .pc-header__search button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    .pc-header__search img {
+        width: 16px;
+    }
+
+
+    /* --- FV (メインビジュアル) --- */
+    .fv-container {
+        /* ヘッダー分下げる */
+        height: calc(100vh - 80px);
+        margin-top: 80px;
+        flex-direction: row; /* 横並び */
+    }
+
+    #fv-canvas-container {
+        flex: 6; /* 左側 6割 */
+        border-bottom: none;
+        border-right: 1px solid #ddd;
+    }
+
+    .fv-info {
+        flex: 4; /* 右側 4割 */
+        padding: 40px;
+        align-items: flex-start; /* 左寄せ */
+        text-align: left;
+    }
+    
+    /* パネル内のレイアウト調整 */
+    .fv-info__default.is-active,
+    .fv-info__content.is-active {
+        transform: translateY(0); /* 上がりすぎ防止 */
+    }
+    .fv-info__actions {
+        justify-content: flex-start; /* ボタン左寄せ */
+    }
+
+
+    /* --- 共通: 横並びレイアウト (Flexbox) --- */
+    /* Product Pickup (Plumes) */
+    .product-pickup .container {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+    }
+    .product-visual {
+        width: 50%;
+        margin-bottom: 0;
+    }
+    .product-info {
+        width: 50%;
+    }
+
+
+    /* Artist Feature (Gary) */
+    .artist-feature .container {
+        /* カンプに合わせて逆順（左：文字、右：写真） */
+        display: flex;
+        flex-direction: row-reverse; 
+        flex-wrap: wrap; /* カルーセルを下に落とすため */
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .artist-visual {
+        width: 48%; /* 画像エリア */
+        margin-bottom: 0;
+    }
+    
+    .artist-info {
+        width: 45%; /* 文字エリア */
+        /* 左寄せのまま */
+    }
+
+    .artist-name {
+        font-size: 4rem; /* GARYロゴっぽく大きく */
+        margin-bottom: 20px;
+    }
+    
+    /* カルーセルは横幅いっぱいにして下に配置 */
+    .artist-carousel {
+        width: 100%;
+        margin-top: 80px;
+        margin-right: 0;
+        overflow: visible; /* はみ出しOK */
+    }
+    .swiper-slide.artist-card,
+    .swiper-slide.artist-card-more {
+        margin-right: 20px;
+    }
+
+
+    /* Brand Philosophy */
+    .brand-philosophy .container {
+        display: flex;
+        align-items: center;
+        gap: 60px;
+    }
+    .brand-visual {
+        width: 45%;
+        margin-bottom: 0;
+    }
+    .brand-text {
+        width: 55%;
+    }
+
+
+    /* Onomato */
+    .onomato .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row-reverse; /* グリッド右、文字左 */
+    }
+    
+    .onomato__grid {
+        width: 50%;
+        margin-bottom: 0;
+        gap: 20px;
+    }
+    
+    /* 文字エリアをラップしていないので、CSS GridかFlexで擬似的にエリアを作りますが、
+       今回は簡易的に要素指定で対応します */
+    .onomato__logo {
+        position: absolute; /* 左上に配置 */
+        top: 0;
+        left: 40px;
+        width: 250px;
+        margin: 0;
+    }
+    
+    .onomato-desc {
+        width: 40%;
+        margin-top: 150px; /* ロゴの下に来るように */
+        font-size: 14px;
+    }
+
+
+    /* --- Footer --- */
+    .footer .container {
+        display: flex;
+        flex-direction: row-reverse; /* ロゴ右、リンク左 */
+        justify-content: space-between;
+        align-items: flex-end; /* 下揃え */
+    }
+
+    .footer-top-logo {
+        width: 300px;
+        margin: 0;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .footer-nav-grid {
+        /* 横一列、あるいは4列などに見やすく */
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-bottom: 0;
+    }
+    
+    .footer-bottom-info {
+        text-align: right;
+        position: absolute;
+        bottom: 0;
+        right: 40px;
+    }
+    /* レイアウトが複雑になるので、カンプ通り「左にリンク群」「右にロゴとSNS」に整理 */
+    .footer {
+        padding-bottom: 40px;
+        position: relative;
+    }
+    
+    .footer-nav-grid {
+        /* 左側に配置 */
+        width: 60%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3列にする */
+        gap: 30px;
+    }
+    
+    .footer-top-logo {
+        /* 右上に配置 */
+        position: absolute;
+        top: 60px;
+        right: 40px;
+    }
+    
+    .footer-bottom-info {
+        /* 右下に配置 */
+        position: absolute;
+        bottom: 60px;
+        right: 40px;
+    }
 }
