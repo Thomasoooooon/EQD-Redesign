@@ -337,16 +337,172 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
 }
 
 // 実行設定
-setupSequence("sequence-plumes", "plumes", 40, "center center", 1500);
+// ==============================================
+// ★Plumes専用: 固定スクロール演出 (Pin & Timeline)
+// ==============================================
+(function setupPlumesScroll() {
+    const canvas = document.getElementById("sequence-plumes");
+    const section = document.querySelector(".product-pickup");
+    // Plumesの文字たちを取得
+    const texts = document.querySelectorAll(".plumes-text");
 
-// ★Gary: アニメーション終了後に画像を表示
-setupSequence("sequence-gary", "gary", 70, "center 60%", 2625, () => {
-    // 画像を表示するクラスを付与
-    const garyImg = document.querySelector('.artist-visual__img');
-    if (garyImg) garyImg.classList.add('is-visible');
-});
+    if (!canvas || !section) return;
 
-setupSequence("sequence-crack",  "crack",  40, "center center", 1500);
+    const context = canvas.getContext("2d");
+    const frameCount = 40; // 画像の枚数
+    const folderName = "plumes";
+
+    // 1. 画像のプリロード
+    const images = [];
+    const seq = { frame: 0 };
+
+    const currentFrame = index => {
+        const number = (index + 1).toString().padStart(4, '0');
+        return `img/sequence/${folderName}/${number}.webp`;
+    };
+
+    for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        img.src = currentFrame(i);
+        images.push(img);
+    }
+
+    // 描画関数
+    function render() {
+        const img = images[seq.frame];
+        if (img && img.complete && img.naturalWidth !== 0) {
+            // キャンバスサイズ調整
+            if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+            }
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0);
+        }
+    }
+    
+    // 最初の1枚目を描画
+    images[0].onload = render;
+
+    // 2. タイムラインの作成
+    // ここで「動きの順番」を作ります
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: section,       // このセクションが画面に来たら
+            start: "center center", // 真ん中に来たらスタート
+            end: "+=4000",          // スクロール距離（長いほどゆっくり動く）
+            pin: true,              // ★画面を固定する！
+            scrub: 0.5,             // スクロールに連動させる
+            markers: false          // 確認用マーカー（完成したらfalse）
+        }
+    });
+
+    // 動き①: 画像をパラパラ再生
+    tl.to(seq, {
+        frame: frameCount - 1,
+        snap: "frame",
+        ease: "none",
+        duration: 2,   // 全体の時間の 2/3 を画像再生に使う
+        onUpdate: render
+    });
+
+    // 動き②: 文字を順番にフワッと表示
+    tl.to(texts, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.1,  // 0.1秒ずつずらして表示
+        duration: 0.5, // 0.5の時間をかけて表示
+        ease: "power2.out"
+    }, ">-0.5"); // 画像が終わる0.5秒前から文字を出し始める（スムーズにするため）
+
+    // 動き③: 最後に少し余韻（何もしない時間）を作る
+    tl.to({}, { duration: 0.5 }); 
+
+})();
+
+// ==============================================
+// ★GARY専用: 固定スクロール演出
+// ==============================================
+(function setupGaryScroll() {
+    const canvas = document.getElementById("sequence-gary");
+    const section = document.querySelector(".artist-feature");
+    // 文字、背景、そして移動した画像もまとめて取得
+    const animElements = document.querySelectorAll(".gary-anim"); 
+
+    if (!canvas || !section) return;
+
+    const context = canvas.getContext("2d");
+    const frameCount = 70;
+    const folderName = "gary";
+
+    // 1. 画像のプリロード
+    const images = [];
+    const seq = { frame: 0 };
+
+    const currentFrame = index => {
+        const number = (index + 1).toString().padStart(4, '0');
+        return `img/sequence/${folderName}/${number}.webp`;
+    };
+
+    for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        img.src = currentFrame(i);
+        images.push(img);
+    }
+
+    function render() {
+        const img = images[seq.frame];
+        if (img && img.complete && img.naturalWidth !== 0) {
+            if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+            }
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0);
+        }
+    }
+    
+    images[0].onload = render;
+
+    // 2. タイムライン作成
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: section,
+            start: "top 20%", // PCで見やすい位置で固定開始
+            end: "+=5000",    // スクロール距離はたっぷりと
+            pin: true,
+            scrub: 0.5,
+            markers: false
+        }
+    });
+
+    // 動き①: 画像再生（ここをゆっくりに！）
+    tl.to(seq, {
+        frame: frameCount - 1,
+        snap: "frame",
+        ease: "none",
+        // ★変更: 2.5秒 -> 5.0秒 に変更して、すごくゆっくりにする
+        duration: 5.0, 
+        onUpdate: render
+    });
+
+    // ★削除: 画像を個別に表示させるコードは不要になったので消しました
+
+    // 動き②: 文字・背景・画像をまとめてフワッと表示
+    tl.to(animElements, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.1,
+        duration: 0.8, // 少しゆったり表示
+        ease: "power2.out"
+    }); // タイミング調整（"<"）を外して、アニメ終了後に自然に出るように変更
+
+    // 動き③: 余韻
+    tl.to({}, { duration: 1.0 }); 
+
+    setupSequence("sequence-crack",  "crack",  40, "center center", 1500);
+
+})();
 
 
 // ==============================================
@@ -437,4 +593,40 @@ fadeElements.forEach(element => {
             }
         }
     );
+});
+
+
+// ==============================================
+// Brand Section: Floating Images (自由自在＆スピードアップ版)
+// ==============================================
+gsap.utils.toArray('.float-anim').forEach((el) => {
+    
+    // ① X軸（左右）: 毎回違う場所へ、素早く移動
+    gsap.to(el, {
+        // -40px 〜 +40px の広い範囲でランダムな場所へ
+        x: "random(-40, 40)", 
+        
+        // 1秒〜2秒でサッと動く（かなり速くなります！）
+        duration: "random(1.0, 2.0)", 
+        
+        ease: "power1.inOut", // ふわっとしつつもキビキビ動く
+        repeat: -1,
+        yoyo: true,
+        
+        // ★最重要: これがあるため、毎回違う場所へ向かって動きます
+        repeatRefresh: true 
+    });
+
+    // ② Y軸（上下）: X軸とは違うリズムで動かす
+    gsap.to(el, {
+        y: "random(-40, 40)",
+        duration: "random(1.0, 2.0)",
+        ease: "power1.inOut",
+        repeat: -1,
+        yoyo: true,
+        repeatRefresh: true,
+        
+        // 開始タイミングを少しずらしてバラバラ感を出す
+        delay: "random(0, 0.5)" 
+    });
 });

@@ -528,20 +528,24 @@ a:hover { opacity: 0.7; }
 
     /* --- ベース設定 --- */
     :root {
-        --section-gap: 180px; /* セクション間隔をさらに広く */
+        /* ★変更: セクションの間隔を 200px に */
+        --section-gap: 200px; 
     }
     
     body {
-        font-size: 15px; /* 文字サイズ少しアップ */
+        font-size: 15px;
         padding-bottom: 0;
     }
 
     .container {
-        max-width: 1200px; /* コンテンツ幅を広めに確保 */
+        /* ★変更: 幅制限をなくして、左右に指定の余白(190px)を入れる */
+        max-width: 100%; 
         margin: 0 auto;
-        padding-left: 60px;
-        padding-right: 60px;
+        padding-left: 190px;
+        padding-right: 190px;
     }
+
+    /* ... 以下、ヘッダー設定などが続きます ... */
 
     /* --- ヘッダー切り替え --- */
     .header, .header__menu-btn, .global-menu, .main-logo-container {
@@ -710,30 +714,69 @@ a:hover { opacity: 0.7; }
 
     /* --- 共通: 横並びレイアウト (Flexbox) --- */
     
+    /* --- 共通: 横並びレイアウト (Flexbox) --- */
+    
     /* ① Plumes (画像左 / 文字右) */
     .product-pickup .container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 80px;
+        display: flex;              /* 横並びにする */
+        align-items: center;        /* 上下中央揃え */
+        justify-content: center;    /* 全体を中央に寄せる */
+        gap: 80px;                  /* 画像と文字の間隔 */
     }
+
+    /* 画像エリア */
     .product-visual {
-        width: 48%;
-        margin-bottom: 0;
+        width: 50%;                 /* 画面の半分くらい */
+        max-width: 600px;           /* 大きくなりすぎないように制限 */
+        margin-bottom: 0;           /* スマホ用の余白を消す */
     }
+    
+    /* 文字エリア */
+    /* ★追加: Plumesの文字は最初隠しておく */
+    .plumes-text {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
     .product-info {
-        width: 45%;
-        text-align: left; /* 左寄せに戻す */
+        width: 45%;                 /* 残りのスペース */
+        max-width: 500px;
+        text-align: left;           /* ★重要: 左揃えに戻す */
     }
-    /* スマホで中央寄せにしたのを強制的に左に戻す */
-    .product-pickup .title-handwritten,
+
+    /* スマホで中央揃えにしていた要素を、強制的に左に戻す */
+    .product-pickup .title-handwritten {
+        text-align: left;
+        margin-bottom: 20px;
+        font-size: 3.5rem;          /* PC用に少し大きく */
+    }
+    
     .product-pickup .product-category {
-        text-align: left; 
+        text-align: left;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
     }
-    .product-pickup .btn-wrapper { text-align: left; margin-top: 40px; }
+
+    .product-desc {
+        font-size: 1rem;
+        line-height: 2;             /* 読みやすく行間を広げる */
+        margin-bottom: 50px;
+    }
+
+    /* ボタンも左寄せに */
+    .product-pickup .btn-wrapper { 
+        text-align: left; 
+        margin-top: 0;
+    }
 
 
     /* ② Artist Feature (文字左 / 画像右) */
+    /* ★追加: GARYのアニメーション要素は最初隠しておく */
+    .gary-anim {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
     .artist-feature .container {
         display: flex;
         flex-direction: row-reverse; /* 画像を右へ */
@@ -742,64 +785,184 @@ a:hover { opacity: 0.7; }
         justify-content: space-between;
     }
 
+    /* PC用の設定エリア内 */
+
     .artist-visual {
-        width: 50%; /* 画像少し大きめ */
+        width: 50%;
         margin-bottom: 0;
-        margin-top: -50px; /* カンプのように少し上に飛び出させる */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* overflow: hidden; ← これがあると装飾が切れる原因になるので、一旦消してみましょう */
+    }
+    
+    #sequence-gary {
+        max-width: 100%;    /* 横幅は親枠を超えない */
+        max-height: 70vh;   /* ★追加: 高さは「画面の70%」まで（これで縦が見切れなくなります） */
+        width: auto;        /* ★変更: 比率を保つためにautoへ */
+        height: auto;       /* ★変更: 比率を保つためにautoへ */
+        object-fit: contain;
     }
     
     .artist-info {
         width: 40%;
-        text-align: left;
-        padding-top: 40px;
+        
+        /* ★変更: テキストを右揃えに */
+        text-align: right; 
+        
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        
+        /* ★変更: 上下は「中央(center)」に戻す */
+        justify-content: center;
+        
+        /* ★追加: Flexboxの子要素（画像やボタン）を「右端(flex-end)」に寄せる */
+        align-items: flex-end;
+        
+        /* ★復活: 上下中央にするために高さを確保 */
+        height: 70vh; 
     }
+
+    /* 静止画の設定 */
+    .artist-info .artist-visual__img {
+        max-width: 280px;
+        height: auto;
+        margin-bottom: 20px;
+        /* 右寄せは親の align-items: flex-end で効くので特別な指定は不要 */
+    }
+
     .artist-name {
-        font-size: 5rem; /* 超巨大文字 */
-        line-height: 0.9;
-        margin-bottom: 30px;
-        text-align: left; /* 左寄せ */
+        font-size: 3.5rem;
+        line-height: 1;
+        margin-bottom: 15px;
+        
+        /* ★変更: 右揃え */
+        text-align: right; 
     }
+
     .artist-role {
         font-size: 1.1rem;
-        margin-bottom: 40px;
-        text-align: left; /* 左寄せ */
+        margin-bottom: 25px;
+        
+        /* ★変更: 右揃え */
+        text-align: right; 
     }
-    .artist-feature .btn-wrapper { text-align: left; }
     
-    /* カルーセル (下に配置) */
+    /* 説明文 */
+    .artist-info .artist-desc {
+        margin-bottom: 40px;
+        /* 説明文は長文なので左揃え(justify)の方が読みやすい場合もありますが、
+           今回は全体の統一感で右揃え(inherit)にします */
+    }
+
+    .artist-feature .btn-wrapper { 
+        /* ★変更: 右揃え */
+        text-align: right; 
+        margin-top: 0;
+    }
+
     .artist-carousel {
         width: 100%;
-        margin-top: 100px;
+        
+        /* ★ここを100pxに指定 */
+        margin-top: 100px; 
+        
         margin-right: 0;
         overflow: visible;
-    }
-    .swiper-slide.artist-card,
-    .swiper-slide.artist-card-more {
-        margin-right: 30px; /* カード間隔広げる */
-        transition: transform 0.3s;
-    }
-    .swiper-slide.artist-card:hover {
-        transform: translateY(-10px); /* ホバーで浮く演出 */
+        
+        /* もしSwiperの上に見えないパディングがあったら0にする */
+        padding-top: 0; 
     }
 
 
-    /* ③ Brand Philosophy (画像左 / 文字右) */
+    /* ③ Brand Philosophy */
     .brand-philosophy .container {
         display: flex;
         align-items: center;
+        justify-content: space-between; /* 左右に配置 */
         gap: 80px;
+        position: relative;
     }
-    .brand-visual {
-        width: 50%;
-        margin-bottom: 0;
-    }
+
+    /* 左側のテキスト */
     .brand-text {
-        width: 45%;
-        font-size: 1.1rem;
-        line-height: 2;
+        width: 40%;
+        text-align: left; /* 左揃え */
+        order: 1; /* 左側に表示 */
+        z-index: 2; /* 画像より手前に */
+    }
+    .brand-text p {
+        font-size: 16px;
+        line-height: 2.2;
+        margin-bottom: 40px;
+    }
+
+    /* ボタン（テキストリンク風） */
+    .btn-text-link {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        border: 1px solid #fff;
+        padding: 15px 40px;
+        display: inline-block;
+        transition: 0.3s;
+    }
+    .btn-text-link:hover {
+        background: #fff;
+        color: #1a1a1a;
     }
     .brand-philosophy .btn-wrapper { text-align: left; }
 
+
+    /* 右側の画像エリア */
+    .brand-visual {
+        width: 55%;
+        margin-bottom: 0;
+        order: 2; /* 右側に表示 */
+        position: relative;
+    }
+
+    /* 3枚の画像を配置するグリッド */
+    .brand-gallery {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2列 */
+        grid-template-rows: auto auto;  /* 2行 */
+        gap: 20px;
+        width: 100%;
+    }
+
+    /* 各画像のスタイル */
+    .brand-img-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 4px; /* 少し角丸にすると今っぽい */
+    }
+
+    /* 1枚目（左上：机） */
+    .item-01 {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        margin-top: 0;
+    }
+
+    /* 2枚目（左下：ペダル） */
+    .item-02 {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        width: 80%; /* 少し小さくして抜け感を作る */
+        margin-left: auto; /* 右寄せ */
+        margin-top: -30px; /* 上に重ねる */
+    }
+
+    /* 3枚目（右：ジェイミー） */
+    .item-03 {
+        grid-column: 2 / 3;
+        grid-row: 1 / 3; /* 縦長にぶち抜き */
+        padding-top: 50px; /* 少し位置を下げる */
+    }
 
     /* ④ Onomato (文字左 / 画像右) */
     .onomato .container {
@@ -889,4 +1052,54 @@ a:hover { opacity: 0.7; }
         justify-content: flex-end;
         margin-top: 20px;
     }
+
+/* PC用の設定エリア内 */
+
+    /* ... (前略: .artist-carousel の設定など) ... */
+
+    /* --- アーティストカードのデザイン変更 --- */
+    
+    /* カード本体の外枠 (288px × 352px) */
+    .swiper-slide.artist-card,
+    .swiper-slide.artist-card-more {
+        width: 288px;  /* ★指定: 幅 */
+        height: 352px; /* ★指定: 高さ */
+        
+        /* 中身のレイアウト調整 */
+        padding: 30px 0; /* 上下の余白 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;     /* 左右中央揃え */
+        justify-content: center; /* 上下中央揃え */
+    }
+
+    /* アーティスト画像 (224px × 224px) */
+    .artist-card__img {
+        width: 224px;  /* ★指定 */
+        height: 224px; /* ★指定 */
+        margin-bottom: 24px; /* 画像と文字の間隔 */
+    }
+
+    /* 役割 (Role) 16px */
+    .artist-card__role {
+        font-size: 16px; /* ★指定 */
+        width: 224px;    /* 画像と同じ幅に揃える */
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    /* 名前 (Name) 24px */
+    .artist-card__name {
+        font-size: 24px; /* ★指定 */
+        width: 224px;    /* 画像と同じ幅に揃える */
+        text-align: left;
+        line-height: 1.2;
+    }
+
+    /* MOREボタンの中身もサイズに合わせて調整 */
+    .swiper-slide.artist-card-more .btn-more-slide {
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+    }
+
 }
