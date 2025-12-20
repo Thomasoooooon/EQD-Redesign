@@ -328,6 +328,29 @@ a:hover { opacity: 0.7; }
    7. Brand & Onomato
    ======================================================= */
 /* ★変更: 白い線を消すためにマージンを0にする */
+/* --- スマホ用のBrand設定 --- */
+
+/* スマホでは2枚目と3枚目を隠す */
+.item-02, .item-03 {
+    display: none;
+}
+
+/* ギャラリーの枠をリセット */
+.brand-gallery {
+    display: block;
+    width: 100%;
+}
+
+/* 1枚目の画像設定 */
+.item-01 {
+    width: 100%;
+    margin-top: 30px; /* テキストとの間隔 */
+}
+.item-01 img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
 .section.brand-philosophy {
     margin-bottom: 0;
 }
@@ -948,20 +971,28 @@ a:hover { opacity: 0.7; }
         margin-top: 0;
     }
 
+   /* PC用エリア内 */
+    
+    /* ③ Brand Philosophy */
+    
+    /* ... (他の設定はそのまま) ... */
+
     /* 2枚目（左下：ペダル） */
     .item-02 {
+        display: block; /* ★追加: スマホで消したのを復活！ */
         grid-column: 1 / 2;
         grid-row: 2 / 3;
-        width: 80%; /* 少し小さくして抜け感を作る */
-        margin-left: auto; /* 右寄せ */
-        margin-top: -30px; /* 上に重ねる */
+        width: 80%;
+        margin-left: auto;
+        margin-top: -30px;
     }
 
     /* 3枚目（右：ジェイミー） */
     .item-03 {
+        display: block; /* ★追加: スマホで消したのを復活！ */
         grid-column: 2 / 3;
-        grid-row: 1 / 3; /* 縦長にぶち抜き */
-        padding-top: 50px; /* 少し位置を下げる */
+        grid-row: 1 / 3;
+        padding-top: 50px;
     }
 
     /* ④ Onomato (文字左 / 画像右) */
