@@ -1,9 +1,10 @@
 @charset "UTF-8";
 
-/* PCヘッダーはスマホでは隠す */
+/* PCヘッダーはスマホで隠す用 */
 .pc-header {
     display: none;
 }
+
 /* =======================================================
    1. 変数・ベース設定
    ======================================================= */
@@ -33,16 +34,24 @@ body {
     line-height: 1.8;
     letter-spacing: 0.05em;
     font-size: 12px;
-    
-    /* ★変更: フッター下の余白を調整（80px -> 40px） */
-    padding-bottom: 40px; 
+    padding-bottom: 40px;
 }
 
-/* ★h4の定義は削除しました（pタグに戻すため） */
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: bottom;
+}
 
-img { max-width: 100%; height: auto; vertical-align: bottom; }
-a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
-a:hover { opacity: 0.7; }
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.3s;
+}
+
+a:hover {
+    opacity: 0.7;
+}
 
 .container {
     width: 100%;
@@ -52,28 +61,28 @@ a:hover { opacity: 0.7; }
     position: relative;
 }
 
-.section { margin-bottom: var(--section-gap); position: relative; }
-.section:last-child { margin-bottom: 0; }
+.section {
+    margin-bottom: var(--section-gap);
+    position: relative;
+}
 
-/* --- 既存のコードを修正 --- */
+.section:last-child {
+    margin-bottom: 0;
+}
 
 .bg-dark {
     background-color: var(--color-bg-dark);
     color: #FFFFFF;
-    padding-top: 80px; padding-bottom: 80px; margin-bottom: 0;
-    
-    /* ★追加: 謎の白い線対策 */
-    /* 上下のセクションと1px重ねることで隙間を埋める */
+    padding-top: 80px;
+    padding-bottom: 80px;
+    margin-bottom: 0;
     margin-top: -1px;
-    padding-top: 81px; /* 重ねた分、内側を1px広げてプラマイゼロにする */
+    padding-top: 81px;
 }
 
-/* 連続する黒背景の調整 */
-.bg-dark + .bg-dark { 
-    /* 上の修正でmargin-top:-1pxが入ったので、ここはpadding調整だけでOK */
-    padding-top: 0; 
+.bg-dark + .bg-dark {
+    padding-top: 0;
 }
-
 
 .header__current-section img {
     transition: opacity 0.3s ease;
@@ -94,13 +103,11 @@ a:hover { opacity: 0.7; }
     align-items: center;
     padding: 14px 40px;
     font-weight: 700;
-    
-    /* ★変更: 16pxに */
     font-size: 16px;
-    
     background-color: var(--color-btn-bg);
     color: var(--color-btn-text);
 }
+
 .btn--outline {
     background: transparent;
     border: 1px solid #FFF;
@@ -121,14 +128,15 @@ a:hover { opacity: 0.7; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
-    /* ★変更: 右側の余白(padding)を0にして、ボタンを右端につける */
-    padding: 0; 
-    padding-left: var(--sp-margin); /* 左側は維持 */
-    
+    padding: 0;
+    padding-left: var(--sp-margin);
     z-index: 9999;
 }
-.header__current-section img { height: 30px; width: auto; }
+
+.header__current-section img {
+    height: 30px;
+    width: auto;
+}
 
 .header__menu-btn {
     background: var(--color-btn-bg);
@@ -141,8 +149,6 @@ a:hover { opacity: 0.7; }
     display: flex;
     align-items: center;
     cursor: pointer;
-    
-    /* ★追加: 右寄せを確実にする */
     margin-left: auto;
 }
 
@@ -150,126 +156,280 @@ a:hover { opacity: 0.7; }
    4. FV (物理演算 + 情報パネル)
    ======================================================= */
 .fv-container {
-    width: 100%; height: 100vh; display: flex; flex-direction: column;
-    overflow: hidden; position: relative; background-color: var(--color-bg);
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-bg);
 }
-#fv-canvas-container {
-    width: 100%; flex: 6; position: relative; overflow: hidden; border-bottom: 1px solid #ddd;
-}
-.fv-info {
-    width: 100%; flex: 4; background-color: #fff; padding: 20px;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    text-align: center; position: relative; z-index: 10;
-}
-.fv-info__default, .fv-info__content {
-    display: none; width: 100%; animation: fadeInSimple 0.6s ease;
-}
-.fv-info__default.is-active, .fv-info__content.is-active {
-    display: block; transform: translateY(-48px);
-}
-.fv-info__msg {
-    font-size: 1.5rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 10px; font-family: var(--font-base);
-}
-.fv-info__sub { font-size: 0.8rem; color: #888; line-height: 1.5; }
-.fv-info__name {
-    font-family: var(--font-base); font-size: 2rem; font-weight: 700; margin-bottom: 5px; line-height: 1.1;
-}
-.fv-info__cat {
-    font-family: var(--font-base); font-size: 16px; color: #666; margin-bottom: 20px;
-}
-.fv-info__actions { display: flex; align-items: center; justify-content: center; gap: 20px; }
-.btn--sm { padding: 10px 24px; font-size: 0.85rem; }
-.btn-circle {
-    width: 45px; height: 45px; border-radius: 50%; background-color: #1a1a1a;
-    color: #fff; border: none; display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; cursor: pointer; transition: transform 0.2s;
-}
-.btn-circle:active { transform: scale(0.95); }
-@keyframes fadeInSimple { from { opacity: 0; } to { opacity: 1; } }
 
-/* ロゴ位置調整 */
-.main-logo-container {
-    position: absolute; top: 128px; left: 0; width: 100%; z-index: 20;
-    pointer-events: none; padding: 0 20px; box-sizing: border-box; text-align: center;
+#fv-canvas-container {
+    width: 100%;
+    flex: 6;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
 }
-.main-logo img { width: 100%; height: auto; max-width: 100%; }
+
+.fv-info {
+    width: 100%;
+    flex: 4;
+    background-color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.fv-info__default, .fv-info__content {
+    display: none;
+    width: 100%;
+    animation: fadeInSimple 0.6s ease;
+}
+
+.fv-info__default.is-active, .fv-info__content.is-active {
+    display: block;
+    transform: translateY(-48px);
+}
+
+.fv-info__msg {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    font-family: var(--font-base);
+}
+
+.fv-info__sub {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.5;
+}
+
+.fv-info__name {
+    font-family: var(--font-base);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1.1;
+}
+
+.fv-info__cat {
+    font-family: var(--font-base);
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.fv-info__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn--sm {
+    padding: 10px 24px;
+    font-size: 0.85rem;
+}
+
+.btn-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-circle:active {
+    transform: scale(0.95);
+}
+
+@keyframes fadeInSimple {
+    from { opacity: 0; } to { opacity: 1; }
+}
+
+.main-logo-container {
+    position: absolute;
+    top: 128px;
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    pointer-events: none;
+    padding: 0 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.main-logo img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
 
 /* =======================================================
    5. Product Pickup
    ======================================================= */
-.product-visual { width: 100%; margin-bottom: 20px; }
-#sequence-plumes { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.section.product-pickup {
+    height: auto;
+    min-height: auto;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+}
 
-.title-handwritten {
+.product-visual {
+    width: 100%;
+    height: auto;
+    padding: 25vh 0 0;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+#sequence-plumes {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.product-info {
+    position: relative;
+    width: 100%;
+    padding: 0 var(--sp-margin) 100px;
+    z-index: 2;
+    background-color: var(--color-bg);
+}
+
+.plumes-text {
+    opacity: 0;
+    transform: translateY(20px);
+    text-align: center;
+}
+
+.product-pickup .title-handwritten {
     font-family: var(--font-base);
-    font-weight: 700; 
-    font-size: 2.5rem; 
-    margin-bottom: 1rem; 
+    font-weight: 700;
+    font-size: 3rem;
     line-height: 1.1;
-    
-    /* ★追加: 中央揃え */
+    margin-bottom: 0.5rem;
     text-align: center;
 }
 
-.product-category {
+.product-pickup .product-category {
     font-size: 16px;
-    color: #666666;
-    margin-bottom: 16px;
+    color: #666;
+    margin-bottom: 1rem;
     font-weight: 700;
-    
-    /* ★追加: 中央揃え */
     text-align: center;
 }
-.product-desc { text-align: justify; margin-bottom: 40px; }
+
+.product-pickup .product-desc {
+    font-size: 12px;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    text-align: justify;
+}
+
+.product-pickup .btn-wrapper {
+    text-align: center;
+    width: 100%;
+    margin-top: 0;
+    pointer-events: auto;
+}
 
 /* =======================================================
    6. Artist Feature
    ======================================================= */
 .artist-visual {
-    width: 100%; margin: 0 0 30px; position: relative;
+    width: 100%;
+    height: auto;
+    padding: 25vh 0 0;
+    margin: 0 0 40px; /* 下の文字との間隔 */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
-/* GARY画像設定 */
+
 .artist-visual__img {
-    width: 100%; height: auto; display: block; opacity: 0;
-    transition: opacity 1.5s ease; pointer-events: none; margin-top: -20px;
+    display: none;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+    margin-top: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
 }
-.artist-visual__img.is-visible { opacity: 1; }
-#sequence-gary { width: 100%; height: auto; display: block; position: relative; z-index: 1; margin: 0 auto; }
+
+.artist-visual__img.is-visible {
+    opacity: 1;
+}
+
+#sequence-gary {
+    width: 100%;
+    height: auto;
+    display: block;
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+}
 
 .artist-name {
-    font-size: 2.0rem;
+    font-size: 3.0rem;
     font-weight: 700;
     margin-bottom: 10px;
-    
-    /* ★追加: 中央揃え */
     text-align: center;
 }
 
 .artist-role {
     font-size: 16px;
     color: #666666;
-    margin-bottom: 40px;
+    margin-bottom: 16px;
     line-height: 1.5;
     font-weight: 700;
-    
-    /* ★追加: 中央揃え */
     text-align: center;
 }
-.artist-desc { margin-bottom: 40px; }
+
+.artist-desc {
+    margin-bottom: 40px;
+}
+
+.gary-anim {
+    opacity: 0;
+    transform: translateY(20px);
+}
 
 /* =======================================================
-   Swiper周りの調整 (MOREボタンの形を修正)
+   カルーセルの設定
    ======================================================= */
 .artist-carousel {
     width: calc(100% + 20px);
     margin-right: -20px;
-    
-    /* 間隔調整 */
-    margin-top: 40px; 
-    
-    /* ページネーション用の余白 */
-    padding-bottom: 40px; 
-    
+    margin-top: 40px;
+    padding-bottom: 40px;
     overflow: hidden;
 }
 
@@ -277,18 +437,15 @@ a:hover { opacity: 0.7; }
     bottom: 0 !important;
 }
 
-/* ★修正: カードの高さを175pxに固定して、MOREボタンの形を維持 */
-.swiper-slide.artist-card,
-.swiper-slide.artist-card-more {
+.swiper-slide.artist-card,.swiper-slide.artist-card-more {
     width: auto;
-    height: 175px; /* ここで高さを強制します */
+    height: 175px;
     box-sizing: border-box;
     border: 1px solid #1a1a1a;
     background: #fff;
     margin-right: 16px;
 }
 
-/* アーティストカードの中身 */
 .swiper-slide.artist-card {
     display: flex;
     flex-direction: column;
@@ -301,16 +458,13 @@ a:hover { opacity: 0.7; }
     margin-right: 20px;
 }
 
-/* MOREボタンの箱 */
 .swiper-slide.artist-card-more {
     width: 104px;
-    /* heightは上で指定済み */
     border: 1px solid #1D1D1D;
     background: #1D1D1D;
     margin-right: 20px;
 }
 
-/* MOREボタンの中身 */
 .btn-more-slide {
     width: 100%;
     height: 100%;
@@ -321,33 +475,69 @@ a:hover { opacity: 0.7; }
     color: #fff;
 }
 
-/* 画像などはそのままでOK */
-.artist-card__img { width: 104px; height: 104px; margin: 0 auto 8px auto; flex-shrink: 0; }
-.artist-card__img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); }
-.artist-card__role { width: 100%; font-size: 12px; font-weight: 700; margin-bottom: 2px; text-align: left; line-height: 1; }
-.artist-card__name { width: 100%; font-size: 16px; font-weight: 700; line-height: 1.1; text-align: left; font-family: var(--font-base); white-space: nowrap; }
+.artist-card__img {
+    width: 104px;
+    height: 104px;
+    margin: 0 auto 8px auto;
+    flex-shrink: 0;
+}
+
+.artist-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+}
+
+.artist-card__role {
+    width: 100%;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    text-align: left;
+    line-height: 1;
+}
+
+.artist-card__name {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: left;
+    font-family: var(--font-base);
+    white-space: nowrap;
+}
 
 /* =======================================================
    X. Crack Transition
    ======================================================= */
 .crack-transition {
-    width: 100%; height: 100vh; position: relative; overflow: hidden; line-height: 0;
-    margin-bottom: -1px; margin-top: -1px;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    line-height: 0;
+    margin-bottom: -1px;
+    margin-top: -1px;
 }
-#sequence-crack { width: 100%; height: 100%; display: block; margin: 0 auto; object-fit: cover; }
+
+#sequence-crack {
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+}
 
 /* =======================================================
    7. Brand & Onomato
    ======================================================= */
-/* --- 7. Brand & Onomato --- */
-/* ★追加: コンテナをFlexboxにして、順序を逆転（画像が上、テキストが下）させる */
 .brand-philosophy .container {
     display: flex;
     flex-direction: column-reverse;
-    gap: 40px; /* 画像とテキストの間隔 */
+    gap: 40px;
 }
 
-/* ★移動: ボタンのスタイルをここに定義（スマホ・PC共通化） */
 .btn-text-link {
     color: #fff;
     font-size: 16px;
@@ -357,75 +547,166 @@ a:hover { opacity: 0.7; }
     display: inline-block;
     transition: 0.3s;
 }
+
 .btn-text-link:hover {
     background: #fff;
     color: #1a1a1a;
 }
 
-/* スマホでは2枚目と3枚目を隠す（さっき追加したコード） */
 .item-02, .item-03 {
     display: none;
 }
-/* ... (以下、さっき追加した brand-gallery や item-01 の設定はそのまま) ... */
 
-/* ギャラリーの枠をリセット */
 .brand-gallery {
     display: block;
     width: 100%;
 }
 
-/* 1枚目の画像設定 */
 .item-01 {
     width: 100%;
-    margin-top: 30px; /* テキストとの間隔 */
+    margin-top: 30px;
 }
+
 .item-01 img {
     width: 100%;
     height: auto;
     border-radius: 4px;
 }
+
 .section.brand-philosophy {
     margin-bottom: 0;
 }
 
-.brand-visual { margin-bottom: 30px; }
-.brand-visual img { width: 100%; filter: contrast(1.1); }
-.brand-text p { text-align: justify; }
+.brand-visual {
+    margin-bottom: 30px;
+}
 
-.onomato__logo { width: 200px; margin: 0 auto 40px; }
-.onomato__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-.onomato-item { display: block; transition: transform 0.2s; }
+.brand-visual img {
+    width: 100%; filter: contrast(1.1);
+}
 
-/* ★変更: 12pxに変更 */
-.onomato-desc { font-size: 12px; margin-top: 40px; text-align: justify; }
+.brand-text p {
+    text-align: justify;
+}
+
+.onomato__logo {
+    width: 200px;
+    margin: 0 auto 40px;
+}
+.onomato__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+.onomato-item {
+    display: block;
+    transition: transform 0.2s;
+}
+
+.onomato-desc {
+    font-size: 12px;
+    margin-top: 40px;
+    text-align: justify;
+}
 
 /* =======================================================
    8. フッター
    ======================================================= */
 .footer {
-    background-color: #ffffff; color: #1D1D1D;
-    padding-top: 60px; padding-bottom: 60px;
+    background-color: #ffffff;
+    color: #1D1D1D;
+    padding-top: 60px;
+    padding-bottom: 60px;
 }
-.footer-top-logo { width: 280px; max-width: 100%; margin: 0 0 50px 0; text-align: left; }
-.footer-top-logo img { width: 100%; }
+
+.footer-top-logo {
+    width: 280px;
+    max-width: 100%;
+    margin: 0 0 50px 0;
+    text-align: left;
+}
+
+.footer-top-logo img {
+    width: 100%;
+}
+
 .footer-nav-grid {
-    display: grid; grid-template-columns: auto auto;
-    justify-content: start; justify-items: start; align-items: start;
-    column-gap: 30px; row-gap: 40px; margin-bottom: 60px;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    justify-items: start;
+    align-items: start;
+    column-gap: 30px;
+    row-gap: 40px;
+    margin-bottom: 60px;
 }
-.footer-link { display: block; width: auto; }
-.footer-link img { width: auto; height: auto; display: block; }
-.item-devices img { width: 104px; } .item-artists img { width: 106px; }
-.item-brand img { width: 84px; } .item-demo img { width: 83px; }
-.item-support img { width: 108px; } .item-dealers img { width: 98px; }
-.footer-bottom-info { text-align: right; }
-.distributor-text { font-size: 0.75rem; line-height: 1.6; margin-bottom: 20px; display: inline-block; }
-.footer-social-row { display: flex; justify-content: flex-end; align-items: center; gap: 24px; }
-.footer-social-row img { width: 48px; height: 48px; object-fit: contain; transition: opacity 0.3s; }
-.footer-social-row a:hover img { opacity: 0.7; }
+
+.footer-link {
+    display: block;
+    width: auto;
+}
+
+.footer-link img {
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.item-devices img {
+    width: 104px;
+}
+
+.item-artists img {
+    width: 106px;
+}
+
+.item-brand img {
+    width: 84px;
+}
+.item-demo img {
+    width: 83px;
+}
+
+.item-support img {
+    width: 108px;
+}
+
+.item-dealers img {
+    width: 98px;
+}
+
+.footer-bottom-info {
+    text-align: right;
+}
+
+.distributor-text {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.footer-social-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 24px;
+}
+
+.footer-social-row img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    transition: opacity 0.3s;
+}
+
+.footer-social-row a:hover img {
+    opacity: 0.7;
+}
 
 /* =======================================================
-   9. Global Menu (修正版: 反転フィルター強化)
+   9. Global Menu
    ======================================================= */
 .global-menu {
     position: fixed;
@@ -439,7 +720,11 @@ a:hover { opacity: 0.7; }
     pointer-events: none;
     transition: opacity 0.4s ease;
 }
-.global-menu.is-active { opacity: 1; pointer-events: auto; }
+
+.global-menu.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .global-menu__inner {
     width: 100%;
@@ -452,18 +737,17 @@ a:hover { opacity: 0.7; }
     position: relative;
 }
 
-/* ① ロゴ */
 .global-menu__logo {
     margin-bottom: 30px;
     width: 80%;
     max-width: 250px;
 }
+
 .global-menu__logo img {
     width: 100%;
-    filter: invert(1); /* ここも白く反転 */
+    filter: invert(1);
 }
 
-/* ② 検索欄 */
 .global-menu__search {
     width: 90%;
     max-width: 300px;
@@ -471,6 +755,7 @@ a:hover { opacity: 0.7; }
     border-bottom: 1px solid #fff;
     margin-bottom: 50px;
 }
+
 .global-menu__search .search-icon {
     position: absolute;
     left: 0;
@@ -478,6 +763,7 @@ a:hover { opacity: 0.7; }
     transform: translateY(-50%);
     width: 18px;
 }
+
 .global-menu__search input {
     width: 100%;
     background: transparent;
@@ -487,15 +773,17 @@ a:hover { opacity: 0.7; }
     font-size: 16px;
     outline: none;
 }
-.global-menu__search input::placeholder { color: #ccc; }
 
+.global-menu__search input::placeholder {
+    color: #ccc;
+}
 
-/* ③ メニューリスト（ここを修正！） */
 .global-menu__list {
     list-style: none;
     text-align: center;
     width: 100%;
 }
+
 .global-menu__list li {
     margin-bottom: 25px;
     opacity: 0;
@@ -503,44 +791,62 @@ a:hover { opacity: 0.7; }
     transition: 0.4s;
 }
 
-/* ★修正: 全てのメニュー画像に強制的に「白く反転」をかけます */
 .global-menu__list li a img {
     width: auto;
     height: auto;
-    filter: invert(1); /* これで文字が白くなります！ */
+    filter: invert(1);
 }
 
-/* 個別サイズ指定 */
-.menu-item-devices img { width: 104px; }
-.menu-item-artists img { width: 106px; }
-.menu-item-brand img   { width: 84px; }
-.menu-item-demo img    { width: 83px; }
-.menu-item-support img { width: 108px; }
-.menu-item-dealers img { width: 98px; }
+.menu-item-devices img {
+    width: 104px;
+}
 
+.menu-item-artists img {
+    width: 106px;
+}
 
-/* ④ SNSアイコン */
+.menu-item-brand img   {
+     width: 84px;
+}
+
+.menu-item-demo img    {
+    width: 83px;
+}
+
+.menu-item-support img {
+    width: 108px;
+}
+
+.menu-item-dealers img {
+    width: 98px;
+}
+
 .global-menu__social-fixed {
     position: absolute;
     right: 30px;
-    bottom: 90px; /* ヘッダー(60px) + 余白(30px) */
+    bottom: 90px;
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
+
 .global-menu__social-fixed img {
     width: 48px;
     height: 48px;
     object-fit: contain;
-    filter: invert(1); /* アイコンも白く */
+    filter: invert(1);
     transition: opacity 0.3s;
 }
+
 .global-menu__social-fixed a:hover img {
     opacity: 0.7;
 }
 
 /* アニメーション用 */
-.global-menu.is-active .global-menu__list li { opacity: 1; transform: translateY(0); }
+.global-menu.is-active .global-menu__list li {
+    opacity: 1; transform: translateY(0);
+}
+
 .global-menu.is-active .global-menu__list li:nth-child(1) { transition-delay: 0.1s; }
 .global-menu.is-active .global-menu__list li:nth-child(2) { transition-delay: 0.2s; }
 .global-menu.is-active .global-menu__list li:nth-child(3) { transition-delay: 0.3s; }
@@ -548,34 +854,143 @@ a:hover { opacity: 0.7; }
 .global-menu.is-active .global-menu__list li:nth-child(5) { transition-delay: 0.5s; }
 .global-menu.is-active .global-menu__list li:nth-child(6) { transition-delay: 0.6s; }
 
-.header__menu-btn.is-active { background-color: #fff; color: #1a1a1a; }
+.header__menu-btn.is-active {
+    background-color: #fff;
+    color: #1a1a1a;
+}
 
 #opening-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-    background-color: #ffffff; z-index: 99999;
-    display: flex; justify-content: center; align-items: center; transition: opacity 1.0s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.0s ease;
 }
-#opening-overlay.is-hidden { opacity: 0; pointer-events: none; }
-#opening-video { width: 100%; height: 100%; object-fit: cover; }
 
-.btn { transition: all 0.3s ease; position: relative; overflow: hidden; z-index: 1; }
+#opening-overlay.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#opening-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
 .btn:hover {
-    background-color: #fff; color: #1a1a1a; transform: translateY(-3px);
+    background-color: #fff;
+    color: #1a1a1a;
+    transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
-.btn--outline:hover { background-color: #fff; color: #1a1a1a; }
-.artist-card { transition: transform 0.3s ease; overflow: hidden; }
-.artist-card__img { overflow: hidden; border-radius: 50%; }
-.artist-card__img img { transition: transform 0.5s ease, filter 0.3s ease; }
-.artist-card:hover .artist-card__img img { transform: scale(1.1); filter: grayscale(0%); }
-.global-menu__list li a { position: relative; display: inline-block; transition: transform 0.3s; }
-.global-menu__list li a:hover { transform: scale(1.1); opacity: 1; }
 
-/* Swiperのドット（アクティブ時）の色変更 */
+.btn--outline:hover {
+    background-color: #fff;
+    color: #1a1a1a;
+}
+
+.artist-card {
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.artist-card__img {
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.artist-card__img img {
+    transition: transform 0.5s ease, filter 0.3s ease;
+}
+
+.artist-card:hover .artist-card__img img {
+    transform: scale(1.1);
+    filter: grayscale(0%);
+}
+
+.global-menu__list li a {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.global-menu__list li a:hover {
+    transform: scale(1.1); 
+    opacity: 1; 
+}
+
 .swiper-pagination-bullet-active {
     background: #1a1a1a;
 }
 
+/* =======================================================
+   9.5. Tablet Responsive (768px 〜 1023px)
+   ======================================================= */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+
+    :root {
+        --sp-margin: 60px;    
+        --section-gap: 140px; 
+    }
+
+    body {
+        font-size: 14px;
+    }
+
+    .container {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .fv-info__msg { 
+        font-size: 2rem; 
+    }
+
+    .fv-info__name { 
+        font-size: 2.5rem; 
+    }
+
+    .product-pickup .title-handwritten, .artist-name {
+        font-size: 3rem;
+    }
+
+    .footer-nav-grid {
+        column-gap: 60px;
+    }
+
+    .footer-top-logo {
+        width: 340px;
+    }
+
+    .onomato-desc {
+        font-size: 14px;
+    }
+
+    .product-pickup .product-desc {
+        font-size: 14px;
+    }
+
+    /* ★修正: カンマが抜けていたので追加しました！ */
+    #sequence-plumes, #sequence-gary {
+        max-width: 480px;
+        width: 100%;
+        height: auto;
+    }
+}
 
 /* =======================================================
    10. PC Responsive (1024px以上)
@@ -584,26 +999,21 @@ a:hover { opacity: 0.7; }
 
     /* --- ベース設定 --- */
     :root {
-        /* ★変更: セクションの間隔を 200px に */
-        --section-gap: 200px; 
+        --section-gap: 200px;
     }
-    
+
     body {
         font-size: 15px;
         padding-bottom: 0;
     }
 
     .container {
-        /* ★変更: 幅制限をなくして、左右に指定の余白(190px)を入れる */
-        max-width: 100%; 
+        max-width: 100%;
         margin: 0 auto;
         padding-left: 190px;
         padding-right: 190px;
     }
 
-    /* ... 以下、ヘッダー設定などが続きます ... */
-
-    /* --- ヘッダー切り替え --- */
     .header, .header__menu-btn, .global-menu, .main-logo-container {
         display: none !important;
     }
@@ -614,141 +1024,132 @@ a:hover { opacity: 0.7; }
         top: 0;
         left: 0;
         width: 100%;
-        height: 80px; /* 高さを少しスリムに調整 */
+        height: 80px;
         background-color: #fff;
         z-index: 9000;
         border-bottom: 1px solid #1a1a1a;
-        /* border-bottom: 1px solid #eaeaea; はカンプになさそうなので削除 */
     }
 
     .pc-header__inner {
-        /* max-width: 1280px;  ← 削除（制限を解除） */
-        /* margin: 0 auto;     ← 削除（中央寄せ不要） */
-        
-        width: 100%;           /* 画面幅いっぱい */
+        width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
-        
-        /* ★ここで左右の余白を固定 */
         padding: 0 40px;
     }
 
-    /* ロゴ */
     .pc-header__logo {
-        /* ★追加: これでナビと検索窓を右端まで押し飛ばします */
         margin-right: auto;
     }
-    
+
     .pc-header__logo img {
         height: 35px;
         width: auto;
     }
 
-    /* ナビゲーション（SVGメニュー） */
     .pc-header__nav {
-        margin-right: 40px; /* 検索窓との間隔 */
+        margin-right: 40px; 
     }
-    
+
     .pc-header__list {
         display: flex;
-        gap: 30px; /* アイコンの間隔 */
+        gap: 30px;
         list-style: none;
-        align-items: center; /* 垂直方向中央揃え */
+        align-items: center; 
     }
-    
+
     .pc-header__list a {
-        font-family: inherit; font-size: inherit; font-weight: inherit;
-        display: block; /* リンク範囲を確保 */
+        font-family: inherit; 
+        font-size: inherit; 
+        font-weight: inherit;
+        display: block;
         opacity: 1;
         transition: opacity 0.3s;
     }
+
     .pc-header__list a:hover {
         opacity: 0.6;
     }
-    
-    /* ★変更: 高さ固定をやめて、autoにします */
+
     .pc-header__list a img {
         width: auto;
         height: auto;
-        display: block; /* 余白ズレ防止 */
-        
-        /* もし白くて見えない場合は以下を有効化 */
-        /* filter: invert(1); */
-    }
-    .pc-header__list a::after { content: none; }
-
-    /* ★修正: サイズ(width) と 上下位置(translateY) を個別に調整 */
-    
-    /* Devices: そのまま */
-    .pc-header__list .pc-menu-item-devices img { 
-        width: 60px; 
-        transform: translateY(-1px); 
+        display: block; 
     }
 
-    /* Artists: 例 -2px で少し上に */
-    .pc-header__list .pc-menu-item-artists img { 
-        width: 57px; 
-        transform: translateY(0px); 
+    .pc-header__list a::after { 
+        content: none; 
     }
 
-    /* Demo: 例 3px で少し下に */
-    .pc-header__list .pc-menu-item-demo img { 
-        width: 42px; 
-        transform: translateY(3px); 
+    .pc-header__list .pc-menu-item-devices img {
+        width: 60px;
+        transform: translateY(-1px);
     }
 
-    /* Brand */
-    .pc-header__list .pc-menu-item-brand img { 
-        width: 48px; 
-        transform: translateY(4px); 
+    .pc-header__list .pc-menu-item-artists img {
+        width: 57px;
+        transform: translateY(0px);
     }
 
-    /* Support */
-    .pc-header__list .pc-menu-item-support img { 
-        width: 56px; 
-        transform: translateY(4px); 
+    .pc-header__list .pc-menu-item-demo img {
+        width: 42px;
+        transform: translateY(3px);
     }
 
-    /* Dealers */
-    .pc-header__list .pc-menu-item-dealers img { 
-        width: 58px; 
-        transform: translateY(2px); 
+    .pc-header__list .pc-menu-item-brand img {
+        width: 48px;
+        transform: translateY(4px);
     }
 
+    .pc-header__list .pc-menu-item-support img {
+        width: 56px;
+        transform: translateY(4px);
+    }
 
-    /* 検索窓 */
+    .pc-header__list .pc-menu-item-dealers img {
+        width: 58px;
+        transform: translateY(2px);
+    }
+
     .pc-header__search {
         display: flex;
         align-items: center;
-        border-bottom: 1px solid #1a1a1a; /* 下線を黒くハッキリと */
+        border-bottom: 1px solid #1a1a1a;
         padding-bottom: 5px;
         gap: 10px;
     }
+
     .pc-header__search input {
         border: none; outline: none;
         font-size: 14px; width: 160px;
-        font-family: var(--font-base); /* フォントを合わせる */
+        font-family: var(--font-base); 
     }
-    .pc-header__search input::placeholder { color: #999; }
-    .pc-header__search button { background: none; border: none; cursor: pointer; padding: 0; }
+
+    .pc-header__search input::placeholder { 
+        color: #999; 
+    }
+
+    .pc-header__search button {
+        background: none; 
+        border: none; 
+        cursor: pointer; 
+        padding: 0; 
+    }
+
     .pc-header__search img {
         width: 16px;
         margin-bottom: 4px;
-        /* 検索アイコンは元が白いので、黒く反転させる */
-        filter: invert(1); 
+        filter: invert(1);
     }
-
-
-    /* --- FV (First View) --- */
+    
     .fv-container {
-        height: calc(100vh - 80px); /* ヘッダー分引く */
+        height: calc(100vh - 80px); 
         margin-top: 80px;
         flex-direction: row;
     }
 
     #fv-canvas-container {
-        flex: 6; 
+        flex: 6;
         border-bottom: none;
         border-right: 1px solid #ddd;
     }
@@ -756,92 +1157,93 @@ a:hover { opacity: 0.7; }
     .fv-info {
         flex: 4;
         padding: 60px;
-        align-items: flex-start; /* 左寄せ */
+        align-items: flex-start;
         text-align: left;
         justify-content: center;
     }
-    
-    .fv-info__msg { font-size: 2rem; margin-bottom: 20px; }
-    .fv-info__sub { font-size: 1rem; }
-    .fv-info__name { font-size: 3rem; margin-bottom: 10px; line-height: 1.1; }
-    .fv-info__cat { font-size: 1.2rem; margin-bottom: 30px; }
-    .fv-info__actions { justify-content: flex-start; }
 
+    .fv-info__msg { 
+        font-size: 2rem; 
+        margin-bottom: 20px; 
+    }
 
-    /* --- 共通: 横並びレイアウト (Flexbox) --- */
-    
-    /* --- 共通: 横並びレイアウト (Flexbox) --- */
-    
-    /* ① Plumes (画像左 / 文字右) */
+    .fv-info__sub { 
+        font-size: 1rem; 
+    }
+
+    .fv-info__name { 
+        font-size: 3rem;
+        margin-bottom: 10px; 
+        line-height: 1.1; 
+    }
+
+    .fv-info__cat { 
+        font-size: 1.2rem; 
+        margin-bottom: 30px; 
+    }
+
+    .fv-info__actions { 
+        justify-content: flex-start; 
+    }
+
+    /* ① Plumes */
     .product-pickup .container {
-        display: flex;              /* 横並びにする */
-        align-items: center;        /* 上下中央揃え */
-        justify-content: center;    /* 全体を中央に寄せる */
-        gap: 80px;                  /* 画像と文字の間隔 */
+        display: flex;              
+        align-items: center;        
+        justify-content: center;   
+        gap: 80px;            
     }
 
-    /* 画像エリア */
     .product-visual {
-        width: 50%;                 /* 画面の半分くらい */
-        max-width: 600px;           /* 大きくなりすぎないように制限 */
-        margin-bottom: 0;           /* スマホ用の余白を消す */
+        width: 50%;                
+        max-width: 600px;          
+        margin-bottom: 0;          
+        padding: 0;
     }
-    
-    /* 文字エリア */
-    /* ★追加: Plumesの文字は最初隠しておく */
+
     .plumes-text {
         opacity: 0;
         transform: translateY(20px);
     }
 
     .product-info {
-        width: 45%;                 /* 残りのスペース */
+        width: 45%;                 
         max-width: 500px;
-        text-align: left;           /* ★重要: 左揃えに戻す */
+        text-align: left;          
     }
 
-    /* スマホで中央揃えにしていた要素を、強制的に左に戻す */
     .product-pickup .title-handwritten {
         text-align: left;
         margin-bottom: 20px;
-        font-size: 3.5rem;          /* PC用に少し大きく */
+        font-size: 3.5rem;         
     }
-    
+
     .product-pickup .product-category {
         text-align: left;
-        font-size: 1.1rem;
+        font-size: 20px;
         margin-bottom: 30px;
     }
 
-    .product-desc {
-        font-size: 1rem;
-        line-height: 2;             /* 読みやすく行間を広げる */
+    .product-pickup .product-desc{
+        /* ★修正: 1remだと15pxになるので、16pxに指定しました */
+        font-size: 16px;
+        line-height: 2;            
         margin-bottom: 50px;
     }
 
-    /* ボタンも左寄せに */
-    .product-pickup .btn-wrapper { 
-        text-align: left; 
+    .product-pickup .btn-wrapper {
+        text-align: left;
         margin-top: 0;
     }
 
-
     /* ② Artist Feature (文字左 / 画像右) */
-    /* ★追加: GARYのアニメーション要素は最初隠しておく */
-    .gary-anim {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
     .artist-feature .container {
         display: flex;
-        flex-direction: row-reverse; /* 画像を右へ */
-        flex-wrap: wrap; 
-        align-items: flex-start; /* 上揃えでレイアウト調整 */
+        flex-direction: row-reverse; 
+        flex-wrap: wrap;
+        align-items: center;
         justify-content: space-between;
     }
-
-    /* PC用の設定エリア内 */
 
     .artist-visual {
         width: 50%;
@@ -849,124 +1251,151 @@ a:hover { opacity: 0.7; }
         display: flex;
         justify-content: center;
         align-items: center;
-        /* overflow: hidden; ← これがあると装飾が切れる原因になるので、一旦消してみましょう */
+        padding: 0;
+        height: 70vh;
     }
-    
+
     #sequence-gary {
-        max-width: 100%;    /* 横幅は親枠を超えない */
-        max-height: 70vh;   /* ★追加: 高さは「画面の70%」まで（これで縦が見切れなくなります） */
-        width: auto;        /* ★変更: 比率を保つためにautoへ */
-        height: auto;       /* ★変更: 比率を保つためにautoへ */
+        max-width: 100%;   
+        max-height: 70vh;   
+        width: auto;        
+        height: auto;     
         object-fit: contain;
     }
-    
+
     .artist-info {
         width: 40%;
-        
-        /* ★変更: テキストを右揃えに */
-        text-align: right; 
-        
+        text-align: right;
         padding-top: 0;
         display: flex;
         flex-direction: column;
-        
-        /* ★変更: 上下は「中央(center)」に戻す */
         justify-content: center;
-        
-        /* ★追加: Flexboxの子要素（画像やボタン）を「右端(flex-end)」に寄せる */
         align-items: flex-end;
-        
-        /* ★復活: 上下中央にするために高さを確保 */
-        height: 70vh; 
+        height: 70vh;
     }
 
-    /* 静止画の設定 */
     .artist-info .artist-visual__img {
+        display: block;
+        position: static;
+        transform: none;
+        margin-top: 0;
         max-width: 280px;
+        width: 100%;      
         height: auto;
-        margin-bottom: 20px;
-        /* 右寄せは親の align-items: flex-end で効くので特別な指定は不要 */
+        margin-bottom: 30px; 
+        margin-left: auto;
+        margin-right: 0;
     }
 
     .artist-name {
         font-size: 3.5rem;
         line-height: 1;
         margin-bottom: 15px;
-        
-        /* ★変更: 右揃え */
-        text-align: right; 
+        text-align: right;
     }
 
     .artist-role {
-        font-size: 1.1rem;
+        font-size: 20px;
         margin-bottom: 25px;
-        
-        /* ★変更: 右揃え */
-        text-align: right; 
-    }
-    
-    /* 説明文 */
-    .artist-info .artist-desc {
-        margin-bottom: 40px;
-        /* 説明文は長文なので左揃え(justify)の方が読みやすい場合もありますが、
-           今回は全体の統一感で右揃え(inherit)にします */
+        text-align: right;
     }
 
-    .artist-feature .btn-wrapper { 
-        /* ★変更: 右揃え */
-        text-align: right; 
+    .artist-info .artist-desc {
+        font-size: 1rem;
+        margin-bottom: 40px;
+    }
+
+    .artist-feature .btn-wrapper {
+        text-align: right;
         margin-top: 0;
     }
 
     .artist-carousel {
         width: 100%;
-        
-        /* ★ここを100pxに指定 */
-        margin-top: 100px; 
-        
+        margin-top: 100px;
         margin-right: 0;
         overflow: visible;
-        
-        /* もしSwiperの上に見えないパディングがあったら0にする */
-        padding-top: 0; 
+        padding-top: 0;
     }
 
+    .swiper-slide.artist-card, .swiper-slide.artist-card-more {
+        width: 288px; 
+        height: 352px; 
+        padding: 30px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;     
+        justify-content: center; 
+    }
+
+    .artist-card__img {
+        width: 224px;  
+        height: 224px; 
+        margin-bottom: 24px;
+    }
+
+    .artist-card__role {
+        font-size: 16px; 
+        width: 224px;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    .artist-card__name {
+        font-size: 24px; 
+        width: 224px;  
+        text-align: left;
+        line-height: 1.2;
+    }
+
+    .swiper-slide.artist-card-more .btn-more-slide {
+        font-size: 1.2rem;
+        letter-spacing: 0.1em;
+    }
+
+    #opening-video {
+        width: 500px;
+        height: auto;
+        object-fit: contain;
+    }
 
     /* ③ Brand Philosophy */
+    .section.brand-philosophy {
+        min-height: 100vh;     
+        display: flex;        
+        align-items: center;   
+        padding-top: 0;       
+        padding-bottom: 0;
+    }
+
     .brand-philosophy .container {
         display: flex;
-        
-        /* ★追加: スマホの逆転設定を解除して、横並びに戻す */
-        flex-direction: row; 
-        
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
         gap: 80px;
         position: relative;
+        height: 100%;
+        width: 100%;
     }
 
-    /* 左側のテキスト */
     .brand-text {
         width: 40%;
         text-align: left;
         order: 1;
         z-index: 2;
     }
+
     .brand-text p {
         font-size: 16px;
         line-height: 2.2;
         margin-bottom: 40px;
     }
 
-    /* ★削除: ボタン（.btn-text-link）の設定は上に移動したので、ここからは消してください */
-    
-    .brand-philosophy .btn-wrapper { text-align: left; }
-    
-    /* ... (以下、brand-visual などはそのまま) ... */
+    .brand-philosophy .btn-wrapper {
+        text-align: left; 
+    }
 
-
-    /* 右側の画像エリア */
-    /* 右側の画像エリア */
     .brand-visual {
         width: 55%;
         margin-bottom: 0;
@@ -974,7 +1403,6 @@ a:hover { opacity: 0.7; }
         position: relative;
     }
 
-    /* 3枚の画像を配置するグリッド */
     .brand-gallery {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -991,16 +1419,14 @@ a:hover { opacity: 0.7; }
         border-radius: 4px;
     }
 
-    /* 1枚目（左上：机） */
     .item-01 {
         grid-column: 1 / 2;
         grid-row: 1 / 2;
         margin-top: 0;
     }
 
-    /* 2枚目（左下：ペダル） */
     .item-02 {
-        display: block; /* ★ここが重要！スマホで消したのを復活 */
+        display: block;
         grid-column: 1 / 2;
         grid-row: 2 / 3;
         width: 80%;
@@ -1008,131 +1434,82 @@ a:hover { opacity: 0.7; }
         margin-top: -30px;
     }
 
-    /* 3枚目（右：ジェイミー） */
     .item-03 {
-        display: block; /* ★ここが重要！スマホで消したのを復活 */
+        display: block;
         grid-column: 2 / 3;
         grid-row: 1 / 3;
         padding-top: 50px;
     }
 
-    /* PC用エリア内 */
-
-    /* ③ Brand Philosophy */
-    
-    /* ★追加: セクション自体を「画面の高さ(100vh)」にする */
-    .section.brand-philosophy {
-        min-height: 100vh;     /* 最低でも画面いっぱいの高さ */
-        display: flex;         /* 中身を上下中央にするため */
-        align-items: center;   /* 上下中央揃え */
-        padding-top: 0;        /* 余分な余白を消す */
-        padding-bottom: 0;
-    }
-
-    /* コンテナの設定（既存のコードに height: 100% を足すイメージ） */
-    .brand-philosophy .container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 80px;
-        position: relative;
-        
-        /* ★追加: コンテナも高さを確保 */
-        height: 100%;
-        width: 100%;
-    }
-
-    /* PC用エリア内 */
-
-    /* PC用エリア内 */
-
     /* ④ Onomato (PC Layout: Centered Stack) */
     .onomato .container {
         display: flex;
-        flex-direction: column; /* 上から下に積む */
-        align-items: center;    /* 中央揃え */
+        flex-direction: column; 
+        align-items: center;   
         position: relative;
-        padding-top: 40px;      /* 上に少し余白 */
+        padding-top: 40px;     
     }
-    
-    /* 1段目: ロゴ (390px) */
+
     .onomato__logo {
         width: 390px;
         max-width: 100%;
-        margin: 0 0 40px 0; /* 下に余白 */
-        order: 1; /* ★並び順: 1番目 */
+        margin: 0 0 40px 0; 
+        order: 1; 
     }
-    
-    /* 2段目: 本文 (700px) */
+
     .onomato-desc {
         width: 100%;
-        max-width: 700px;     /* ★指定: 幅700px */
+        max-width: 700px;    
         margin-top: 0;
-        margin-bottom: 60px;  /* 画像との間隔 */
+        margin-bottom: 60px;  
         font-size: 1rem;
         line-height: 2;
-        text-align: center;   /* ★指定: 中央揃え */
-        
-        /* HTMLでは画像の下にあるので、orderで上に持ってくる */
-        order: 2; /* ★並び順: 2番目 */
-        
-        /* 念のためFlexbox解除 */
-        display: block; 
+        text-align: center;
+        order: 2; 
+        display: block;
     }
-    
-    /* 3段目: GIF画像4枚 (220px x 4) */
+
     .onomato__grid {
         width: 100%;
-        /* GIF4枚(880px) + 隙間(60px)が入る幅を確保 */
-        max-width: 1000px; 
+        max-width: 1000px;
         margin-bottom: 0;
-        
-        display: flex;          /* 横並び */
-        justify-content: center; /* 中央寄せ */
-        gap: 20px;              /* 画像間の隙間 */
-        
-        order: 3; /* ★並び順: 3番目 */
+        display: flex;         
+        justify-content: center; 
+        gap: 20px;              
+        order: 3; 
     }
-    
-    /* 画像アイテム設定 */
+
     .onomato-item {
-        width: 220px;  /* ★指定: 幅 */
-        height: 220px; /* ★指定: 高さ */
-        flex-shrink: 0; /* 画面が広くても220pxを維持（狭いときは自動縮小させたい場合は1にする） */
+        width: 220px;
+        height: 220px; 
+        flex-shrink: 0;
     }
-    
+
     .onomato-item img {
         width: 100%;
         height: 100%;
-        object-fit: contain; /* アスペクト比を保って収める */
+        object-fit: contain; 
         display: block;
         border-radius: 8px;
         transition: transform 0.3s;
     }
-    
-    /* ホバーで浮く演出 */
+
     .onomato-item:hover img {
         transform: translateY(-10px);
     }
-    
 
-    /* PC用エリア内 */
-
-    /* --- Footer (PC Layout) --- */
     .footer {
         padding-top: 200px;
         padding-bottom: 100px;
         background-color: #fff;
     }
-    
+
     .footer .container {
-        display: block; 
+        display: block;
         position: relative;
-        min-height: 260px; 
+        min-height: 260px;
     }
 
-    /* ① ナビゲーション (左側) */
     .footer-nav-grid {
         width: 55%;
         display: grid;
@@ -1141,108 +1518,99 @@ a:hover { opacity: 0.7; }
         row-gap: 50px;
         margin-bottom: 0;
     }
-    
-    /* ★修正: 画像サイズの上書きを削除しました */
+
     .footer-link img {
-        /* height: 22px; ← これを削除して元のサイズに戻します */
-        height: auto; 
-        width: auto; /* グローバル設定の幅(104pxなど)が効くようになります */
+        height: auto;
+        width: auto;
         transition: opacity 0.3s;
     }
+
     .footer-link:hover {
         opacity: 0.6;
     }
 
-    /* ② ロゴ (右上) */
     .footer-top-logo {
         position: absolute;
         top: -10px;
-        
-        /* ★修正: right: 0 ではなく、パディング分の 190px を指定 */
-        right: 190px; 
-        
+        right: 190px;
         width: 360px;
         margin: 0;
         text-align: right;
     }
-    
-    /* ③ 会社情報とSNS (右下) */
+
     .footer-bottom-info {
         position: absolute;
         bottom: 0;
-        
-        /* ★修正: ここも 190px に */
         right: 190px;
-        
         text-align: right;
         width: auto;
     }
-    
+
     .distributor-text {
         font-size: 16px;
         line-height: 1.8;
         margin-bottom: 25px;
         display: block;
     }
-    
-    /* SNSアイコン */
+
     .footer-social-row {
         justify-content: flex-end;
         gap: 20px;
     }
+
     .footer-social-row img {
-        /* ★修正: 40px から元の 48px に戻しました */
-        width: 48px; 
+        width: 48px;
         height: 48px;
     }
-
-/* PC用の設定エリア内 */
-
-    /* ... (前略: .artist-carousel の設定など) ... */
-
-    /* --- アーティストカードのデザイン変更 --- */
     
-    /* カード本体の外枠 (288px × 352px) */
-    .swiper-slide.artist-card,
-    .swiper-slide.artist-card-more {
-        width: 288px;  /* ★指定: 幅 */
-        height: 352px; /* ★指定: 高さ */
-        
-        /* 中身のレイアウト調整 */
-        padding: 30px 0; /* 上下の余白 */
-        display: flex;
-        flex-direction: column;
-        align-items: center;     /* 左右中央揃え */
-        justify-content: center; /* 上下中央揃え */
-    }
+}
 
-    /* アーティスト画像 (224px × 224px) */
-    .artist-card__img {
-        width: 224px;  /* ★指定 */
-        height: 224px; /* ★指定 */
-        margin-bottom: 24px; /* 画像と文字の間隔 */
-    }
+/* =======================================================
+   11. Official Site Link (元サイトへのリンクボタン)
+   ======================================================= */
 
-    /* 役割 (Role) 16px */
-    .artist-card__role {
-        font-size: 16px; /* ★指定 */
-        width: 224px;    /* 画像と同じ幅に揃える */
-        text-align: left;
-        margin-bottom: 5px;
-    }
+/* --- SP用ボタン --- */
+.btn-official-sp {
+    position: absolute;
+    bottom: 80px;         
+    left: 30px;          
+    font-size: 12px;
+    color: #888;          
+    border-bottom: 1px solid #555;
+    padding-bottom: 2px;
+    letter-spacing: 0.05em;
+    z-index: 10;
+}
 
-    /* 名前 (Name) 24px */
-    .artist-card__name {
-        font-size: 24px; /* ★指定 */
-        width: 224px;    /* 画像と同じ幅に揃える */
-        text-align: left;
-        line-height: 1.2;
-    }
+.btn-official-sp:hover {
+    color: #fff;
+    border-color: #fff;
+}
 
-    /* MOREボタンの中身もサイズに合わせて調整 */
-    .swiper-slide.artist-card-more .btn-more-slide {
-        font-size: 1.2rem;
-        letter-spacing: 0.1em;
-    }
+/* --- PC用ボタン (ヘッダーの右端に配置) --- */
+.btn-official-pc {
+    display: none; 
+}
 
+@media screen and (min-width: 1024px) {
+    .btn-official-pc {
+        display: inline-block;
+        margin-left: 20px; 
+        font-size: 12px;
+        font-weight: 700;
+        color: #1a1a1a;
+        border: 1px solid #1a1a1a; 
+        padding: 8px 16px;      
+        transition: 0.3s;
+        white-space: nowrap;   
+    }
+    
+    .btn-official-pc:hover {
+        background-color: #1a1a1a;
+        color: #fff;
+    }
+    
+    .pc-header__inner {
+        padding-right: 30px; 
+    }
 }

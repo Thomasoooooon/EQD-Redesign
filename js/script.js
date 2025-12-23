@@ -3,7 +3,6 @@
 // ==============================================
 const container = document.getElementById('fv-canvas-container');
 
-// ★全18個のデータ
 const pedalDataList = [
     { id: 'fv01', name: 'Acapulco Gold', category: 'パワーアンプディストーション', sound: 'audio/fv01.mp3', link: 'https://www.earthquakerdevices.jp/acapulco-gold', texture: 'img/fv-parts/fv01.png' },
     { id: 'fv02', name: 'Afterneath', category: 'ショートディレイリバーブ',    sound: 'audio/fv02.mp3', link: 'https://www.earthquakerdevices.jp/afterneath', texture: 'img/fv-parts/fv02.png' },
@@ -24,22 +23,16 @@ const pedalDataList = [
     { id: 'fv18', name: 'Plumes',   category: 'オーバードライブ',  sound: 'audio/fv18.mp3', link: 'https://www.earthquakerdevices.jp/plumes', texture: 'img/fv-parts/fv18.png' },
 ];
 
-// ★関数: 画面幅に応じたスケールを計算する
 function getResponsiveScale(width) {
-    // コンソールに今の幅と判定を表示（F12のConsoleタブで確認できます）
     console.log("現在の幅:", width);
-
     if (width < 768) {
         console.log("→ スマホサイズ適用");
         return 0.8; 
     } else if (width < 1024) {
         console.log("→ タブレットサイズ適用");
-        // ★ここも一時的に大きくして、変化するか確認！
         return 1.2; 
     } else {
         console.log("→ PCサイズ適用");
-        // ★まずは 2.5 (2.5倍) くらいで試すのがおすすめ！
-        // 10.0 だと大きすぎて画面から消えることがあります
         return 1.6; 
     }
 }
@@ -64,7 +57,6 @@ if (container) {
     const width = container.clientWidth;
     const height = container.clientHeight;
 
-    // 現在のスケールを初期化
     let currentScale = getResponsiveScale(window.innerWidth);
 
     const render = Render.create({
@@ -78,18 +70,15 @@ if (container) {
         }
     });
 
-    // 床と壁
     const ground = Bodies.rectangle(width / 2, height + 60, 20000, 120, { isStatic: true, render: { visible: false } });
     const leftWall = Bodies.rectangle(-60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     const rightWall = Bodies.rectangle(width + 60, height / 2, 120, height * 2, { isStatic: true, render: { visible: false } });
     Composite.add(world, [ground, leftWall, rightWall]);
 
-    // ペダル生成関数
     function addFallingObject(x, y, dataId, scale) {
         const data = pedalDataList.find(item => item.id === dataId);
         if (!data) return;
 
-        // ★サイズ計算: 基本サイズ40px × スケール
         const radius = 40 * scale;
 
         const body = Bodies.circle(x, y, radius, { 
@@ -103,7 +92,6 @@ if (container) {
         Composite.add(world, body);
     }
 
-    // 初回生成
     pedalDataList.forEach((pedal, index) => {
         const x = width * 0.1 + Math.random() * (width * 0.8);
         const y = -100 - (index * 150) - (Math.random() * 100);
@@ -130,43 +118,32 @@ if (container) {
         }
     });
 
-    // ★リサイズ時の処理（壁の移動 ＆ ペダルの拡大縮小）
     window.addEventListener('resize', () => {
         const newWidth = container.clientWidth;
         const newHeight = container.clientHeight;
 
-        // 1. 描画エリア更新
         render.canvas.width = newWidth;
         render.canvas.height = newHeight;
         render.options.width = newWidth;
         render.options.height = newHeight;
 
-        // 2. 新しいスケールを計算
         const newScale = getResponsiveScale(window.innerWidth);
 
-        // 3. スケールが変わっていたら、全ペダルを拡大縮小する
         if (newScale !== currentScale) {
-            // 倍率を計算 (例: 0.6 -> 1.0 なら 約1.66倍にする)
             const scaleFactor = newScale / currentScale;
 
             const allBodies = Composite.allBodies(world);
             allBodies.forEach(body => {
-                // ペダルだけを対象にする（壁や床は除外）
                 if (body.plugin && body.plugin.pedalData) {
-                    // 物理演算上のサイズを変更
-                    Body.scale(body, scaleFactor, scaleFactor);
-                    
-                    // 見た目（画像）のサイズを変更
+                    Body.scale(body, scaleFactor, scaleFactor);         
                     body.render.sprite.xScale = newScale;
                     body.render.sprite.yScale = newScale;
                 }
             });
 
-            // 現在のスケールを更新
             currentScale = newScale;
         }
 
-        // 4. 壁と床の位置調整
         Body.setPosition(rightWall, { x: newWidth + 60, y: newHeight / 2 });
         Body.setPosition(leftWall, { x: -60, y: newHeight / 2 });
         Body.setPosition(ground, { x: newWidth / 2, y: newHeight + 60 });
@@ -292,7 +269,6 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
     const images = [];
     const seq = { frame: 0 };
 
-    // 画像のプリロード
     for (let i = 0; i < frameCount; i++) {
         const img = new Image();
         img.src = currentFrame(i);
@@ -302,7 +278,6 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
     function render() {
         const img = images[seq.frame];
         if (img && img.complete && img.naturalWidth !== 0) {
-            // キャンバスのサイズを画像に合わせる
             if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
                 canvas.width = img.naturalWidth;
                 canvas.height = img.naturalHeight;
@@ -312,10 +287,8 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
         }
     }
 
-    // 最初の画像だけ先に描画しておく（チラつき防止）
     images[0].onload = render;
 
-    // ScrollTriggerの設定
     gsap.to(seq, {
         frame: frameCount - 1,
         snap: "frame",
@@ -327,7 +300,6 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
             pin: true,
             scrub: 0.5,
             markers: false,
-            // ★再生が終わって通り過ぎたら実行（画像を表示する）
             onLeave: () => {
                 if (onComplete) onComplete();
             }
@@ -336,26 +308,24 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
     });
 }
 
-// 実行設定
 // ==============================================
-// ★Plumes専用: 固定スクロール演出 (Pin & Timeline)
+// ★Plumes専用: 固定スクロール演出 (SP/PC分岐版)
 // ==============================================
 (function setupPlumesScroll() {
     const canvas = document.getElementById("sequence-plumes");
     const section = document.querySelector(".product-pickup");
-    // Plumesの文字たちを取得
+    const visual = document.querySelector(".product-visual");
     const texts = document.querySelectorAll(".plumes-text");
 
-    if (!canvas || !section) return;
+    if (!canvas || !section || !visual) return;
 
     const context = canvas.getContext("2d");
-    const frameCount = 40; // 画像の枚数
+    const frameCount = 40;
     const folderName = "plumes";
-
-    // 1. 画像のプリロード
     const images = [];
     const seq = { frame: 0 };
 
+    // 1. 画像のプリロード
     const currentFrame = index => {
         const number = (index + 1).toString().padStart(4, '0');
         return `img/sequence/${folderName}/${number}.webp`;
@@ -367,11 +337,9 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
         images.push(img);
     }
 
-    // 描画関数
     function render() {
         const img = images[seq.frame];
         if (img && img.complete && img.naturalWidth !== 0) {
-            // キャンバスサイズ調整
             if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
                 canvas.width = img.naturalWidth;
                 canvas.height = img.naturalHeight;
@@ -380,65 +348,95 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
             context.drawImage(img, 0, 0);
         }
     }
-    
-    // 最初の1枚目を描画
     images[0].onload = render;
 
-    // 2. タイムラインの作成
-    // ここで「動きの順番」を作ります
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: section,       // このセクションが画面に来たら
-            start: "center center", // 真ん中に来たらスタート
-            end: "+=4000",          // スクロール距離（長いほどゆっくり動く）
-            pin: true,              // ★画面を固定する！
-            scrub: 0.5,             // スクロールに連動させる
-            markers: false          // 確認用マーカー（完成したらfalse）
+    // 2. ScrollTrigger (レスポンシブ分岐)
+    ScrollTrigger.matchMedia({
+        
+        // ▼▼ スマホ (1023px以下) ▼▼
+        "(max-width: 1023px)": function() {
+            gsap.to(seq, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: canvas,   
+                    start: "center center", 
+                    end: "+=1500",
+                    pin: visual,      
+                    scrub: 0.5,
+                    markers: false
+                },
+                onUpdate: render
+            });
+
+            texts.forEach(text => {
+                gsap.to(text, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: text,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+        },
+
+        // ▼▼ PC (1024px以上) ▼▼
+        "(min-width: 1024px)": function() {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: "center center",
+                    end: "+=4000",
+                    pin: true,
+                    scrub: 0.5,
+                    markers: false
+                }
+            });
+
+            tl.to(seq, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                duration: 2,
+                onUpdate: render
+            });
+
+            tl.to(texts, {
+                opacity: 1,
+                y: 0,
+                stagger: 0.1,
+                duration: 0.5,
+                ease: "power2.out"
+            }, ">-0.5");
+
+            tl.to({}, { duration: 0.5 });
         }
     });
 
-    // 動き①: 画像をパラパラ再生
-    tl.to(seq, {
-        frame: frameCount - 1,
-        snap: "frame",
-        ease: "none",
-        duration: 2,   // 全体の時間の 2/3 を画像再生に使う
-        onUpdate: render
-    });
-
-    // 動き②: 文字を順番にフワッと表示
-    tl.to(texts, {
-        opacity: 1,
-        y: 0,
-        stagger: 0.1,  // 0.1秒ずつずらして表示
-        duration: 0.5, // 0.5の時間をかけて表示
-        ease: "power2.out"
-    }, ">-0.5"); // 画像が終わる0.5秒前から文字を出し始める（スムーズにするため）
-
-    // 動き③: 最後に少し余韻（何もしない時間）を作る
-    tl.to({}, { duration: 0.5 }); 
-
 })();
-
 // ==============================================
-// ★GARY専用: 固定スクロール演出
+// ★GARY専用: 固定スクロール演出 (SP/PC分岐版)
 // ==============================================
 (function setupGaryScroll() {
     const canvas = document.getElementById("sequence-gary");
     const section = document.querySelector(".artist-feature");
-    // 文字、背景、そして移動した画像もまとめて取得
-    const animElements = document.querySelectorAll(".gary-anim"); 
+    const visual = document.querySelector(".artist-visual"); 
+    const animElements = document.querySelectorAll(".gary-anim");
 
-    if (!canvas || !section) return;
+    if (!canvas || !section || !visual) return;
 
     const context = canvas.getContext("2d");
     const frameCount = 70;
     const folderName = "gary";
-
-    // 1. 画像のプリロード
     const images = [];
     const seq = { frame: 0 };
 
+    // 1. 画像のプリロード
     const currentFrame = index => {
         const number = (index + 1).toString().padStart(4, '0');
         return `img/sequence/${folderName}/${number}.webp`;
@@ -461,44 +459,75 @@ function setupSequence(canvasId, folderName, frameCount, scrollStart = "center c
             context.drawImage(img, 0, 0);
         }
     }
-    
     images[0].onload = render;
 
-    // 2. タイムライン作成
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: section,
-            start: "top 20%", // PCで見やすい位置で固定開始
-            end: "+=5000",    // スクロール距離はたっぷりと
-            pin: true,
-            scrub: 0.5,
-            markers: false
+    // 2. ScrollTrigger (レスポンシブ分岐)
+    ScrollTrigger.matchMedia({
+        
+        // ▼▼ スマホ (1023px以下) ▼▼
+        "(max-width: 1023px)": function() {
+            gsap.to(seq, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: canvas,     
+                    start: "center center", 
+                    end: "+=2000",        
+                    pin: visual,       
+                    scrub: 0.5,
+                    markers: false
+                },
+                onUpdate: render
+            });
+
+            animElements.forEach(el => {
+                gsap.to(el, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+        },
+
+        // ▼▼ PC (1024px以上) ▼▼
+        "(min-width: 1024px)": function() {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 20%", 
+                    end: "+=5000",
+                    pin: true,
+                    scrub: 0.5,
+                    markers: false
+                }
+            });
+
+            tl.to(seq, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                duration: 5.0,
+                onUpdate: render
+            });
+
+            tl.to(animElements, {
+                opacity: 1,
+                y: 0,
+                stagger: 0.1,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+
+            tl.to({}, { duration: 1.0 }); 
         }
     });
-
-    // 動き①: 画像再生（ここをゆっくりに！）
-    tl.to(seq, {
-        frame: frameCount - 1,
-        snap: "frame",
-        ease: "none",
-        // ★変更: 2.5秒 -> 5.0秒 に変更して、すごくゆっくりにする
-        duration: 5.0, 
-        onUpdate: render
-    });
-
-    // ★削除: 画像を個別に表示させるコードは不要になったので消しました
-
-    // 動き②: 文字・背景・画像をまとめてフワッと表示
-    tl.to(animElements, {
-        opacity: 1,
-        y: 0,
-        stagger: 0.1,
-        duration: 0.8, // 少しゆったり表示
-        ease: "power2.out"
-    }); // タイミング調整（"<"）を外して、アニメ終了後に自然に出るように変更
-
-    // 動き③: 余韻
-    tl.to({}, { duration: 1.0 }); 
 
     setupSequence("sequence-crack",  "crack",  40, "center center", 1500);
 
@@ -604,7 +633,6 @@ ScrollTrigger.matchMedia({
     // ① PC (1024px以上): ゆらゆら浮遊アニメーション
     "(min-width: 1024px)": function() {
         gsap.utils.toArray('.float-anim').forEach((el) => {
-            // X軸（左右）
             gsap.to(el, {
                 x: "random(-40, 40)", 
                 duration: "random(1.0, 2.0)", 
@@ -614,7 +642,6 @@ ScrollTrigger.matchMedia({
                 repeatRefresh: true 
             });
 
-            // Y軸（上下）
             gsap.to(el, {
                 y: "random(-40, 40)",
                 duration: "random(1.0, 2.0)",
@@ -627,11 +654,9 @@ ScrollTrigger.matchMedia({
         });
     },
 
-    // ② スマホ (1023px以下): ふわっと表示 (以前のjs-fadeと同じ動き)
+    // ② スマホ (1023px以下)
     "(max-width: 1023px)": function() {
-        // スマホで見えている画像（item-01）に対してフェードインを設定
         gsap.utils.toArray('.brand-img-item').forEach((el) => {
-            // 既にスタイルが当たっている可能性があるので一旦リセット
             gsap.set(el, { clearProps: "all" });
             
             gsap.fromTo(el, 
@@ -643,7 +668,7 @@ ScrollTrigger.matchMedia({
                     ease: "power2.out", 
                     scrollTrigger: {
                         trigger: el,
-                        start: "top 85%", // 画面の下の方に来たら発火
+                        start: "top 85%", 
                         toggleActions: "play none none reverse" 
                     }
                 }
