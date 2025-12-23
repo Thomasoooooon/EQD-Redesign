@@ -597,36 +597,57 @@ fadeElements.forEach(element => {
 
 
 // ==============================================
-// Brand Section: Floating Images (自由自在＆スピードアップ版)
+// Brand Section: アニメーション出し分け
 // ==============================================
-gsap.utils.toArray('.float-anim').forEach((el) => {
+ScrollTrigger.matchMedia({
     
-    // ① X軸（左右）: 毎回違う場所へ、素早く移動
-    gsap.to(el, {
-        // -40px 〜 +40px の広い範囲でランダムな場所へ
-        x: "random(-40, 40)", 
-        
-        // 1秒〜2秒でサッと動く（かなり速くなります！）
-        duration: "random(1.0, 2.0)", 
-        
-        ease: "power1.inOut", // ふわっとしつつもキビキビ動く
-        repeat: -1,
-        yoyo: true,
-        
-        // ★最重要: これがあるため、毎回違う場所へ向かって動きます
-        repeatRefresh: true 
-    });
+    // ① PC (1024px以上): ゆらゆら浮遊アニメーション
+    "(min-width: 1024px)": function() {
+        gsap.utils.toArray('.float-anim').forEach((el) => {
+            // X軸（左右）
+            gsap.to(el, {
+                x: "random(-40, 40)", 
+                duration: "random(1.0, 2.0)", 
+                ease: "power1.inOut", 
+                repeat: -1,
+                yoyo: true,
+                repeatRefresh: true 
+            });
 
-    // ② Y軸（上下）: X軸とは違うリズムで動かす
-    gsap.to(el, {
-        y: "random(-40, 40)",
-        duration: "random(1.0, 2.0)",
-        ease: "power1.inOut",
-        repeat: -1,
-        yoyo: true,
-        repeatRefresh: true,
-        
-        // 開始タイミングを少しずらしてバラバラ感を出す
-        delay: "random(0, 0.5)" 
-    });
+            // Y軸（上下）
+            gsap.to(el, {
+                y: "random(-40, 40)",
+                duration: "random(1.0, 2.0)",
+                ease: "power1.inOut",
+                repeat: -1,
+                yoyo: true,
+                repeatRefresh: true,
+                delay: "random(0, 0.5)" 
+            });
+        });
+    },
+
+    // ② スマホ (1023px以下): ふわっと表示 (以前のjs-fadeと同じ動き)
+    "(max-width: 1023px)": function() {
+        // スマホで見えている画像（item-01）に対してフェードインを設定
+        gsap.utils.toArray('.brand-img-item').forEach((el) => {
+            // 既にスタイルが当たっている可能性があるので一旦リセット
+            gsap.set(el, { clearProps: "all" });
+            
+            gsap.fromTo(el, 
+                { opacity: 0, y: 30 }, 
+                {
+                    opacity: 1, 
+                    y: 0, 
+                    duration: 1,
+                    ease: "power2.out", 
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%", // 画面の下の方に来たら発火
+                        toggleActions: "play none none reverse" 
+                    }
+                }
+            );
+        });
+    }
 });

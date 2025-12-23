@@ -55,12 +55,24 @@ a:hover { opacity: 0.7; }
 .section { margin-bottom: var(--section-gap); position: relative; }
 .section:last-child { margin-bottom: 0; }
 
+/* --- 既存のコードを修正 --- */
+
 .bg-dark {
     background-color: var(--color-bg-dark);
     color: #FFFFFF;
     padding-top: 80px; padding-bottom: 80px; margin-bottom: 0;
+    
+    /* ★追加: 謎の白い線対策 */
+    /* 上下のセクションと1px重ねることで隙間を埋める */
+    margin-top: -1px;
+    padding-top: 81px; /* 重ねた分、内側を1px広げてプラマイゼロにする */
 }
-.bg-dark + .bg-dark { padding-top: 0; }
+
+/* 連続する黒背景の調整 */
+.bg-dark + .bg-dark { 
+    /* 上の修正でmargin-top:-1pxが入ったので、ここはpadding調整だけでOK */
+    padding-top: 0; 
+}
 
 
 .header__current-section img {
@@ -327,13 +339,34 @@ a:hover { opacity: 0.7; }
 /* =======================================================
    7. Brand & Onomato
    ======================================================= */
-/* ★変更: 白い線を消すためにマージンを0にする */
-/* --- スマホ用のBrand設定 --- */
+/* --- 7. Brand & Onomato --- */
+/* ★追加: コンテナをFlexboxにして、順序を逆転（画像が上、テキストが下）させる */
+.brand-philosophy .container {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 40px; /* 画像とテキストの間隔 */
+}
 
-/* スマホでは2枚目と3枚目を隠す */
+/* ★移動: ボタンのスタイルをここに定義（スマホ・PC共通化） */
+.btn-text-link {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border: 1px solid #fff;
+    padding: 15px 40px;
+    display: inline-block;
+    transition: 0.3s;
+}
+.btn-text-link:hover {
+    background: #fff;
+    color: #1a1a1a;
+}
+
+/* スマホでは2枚目と3枚目を隠す（さっき追加したコード） */
 .item-02, .item-03 {
     display: none;
 }
+/* ... (以下、さっき追加した brand-gallery や item-01 の設定はそのまま) ... */
 
 /* ギャラリーの枠をリセット */
 .brand-gallery {
@@ -902,8 +935,12 @@ a:hover { opacity: 0.7; }
     /* ③ Brand Philosophy */
     .brand-philosophy .container {
         display: flex;
+        
+        /* ★追加: スマホの逆転設定を解除して、横並びに戻す */
+        flex-direction: row; 
+        
         align-items: center;
-        justify-content: space-between; /* 左右に配置 */
+        justify-content: space-between;
         gap: 80px;
         position: relative;
     }
@@ -911,9 +948,9 @@ a:hover { opacity: 0.7; }
     /* 左側のテキスト */
     .brand-text {
         width: 40%;
-        text-align: left; /* 左揃え */
-        order: 1; /* 左側に表示 */
-        z-index: 2; /* 画像より手前に */
+        text-align: left;
+        order: 1;
+        z-index: 2;
     }
     .brand-text p {
         font-size: 16px;
@@ -921,47 +958,37 @@ a:hover { opacity: 0.7; }
         margin-bottom: 40px;
     }
 
-    /* ボタン（テキストリンク風） */
-    .btn-text-link {
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-        border: 1px solid #fff;
-        padding: 15px 40px;
-        display: inline-block;
-        transition: 0.3s;
-    }
-    .btn-text-link:hover {
-        background: #fff;
-        color: #1a1a1a;
-    }
+    /* ★削除: ボタン（.btn-text-link）の設定は上に移動したので、ここからは消してください */
+    
     .brand-philosophy .btn-wrapper { text-align: left; }
+    
+    /* ... (以下、brand-visual などはそのまま) ... */
 
 
+    /* 右側の画像エリア */
     /* 右側の画像エリア */
     .brand-visual {
         width: 55%;
         margin-bottom: 0;
-        order: 2; /* 右側に表示 */
+        order: 2;
         position: relative;
     }
 
     /* 3枚の画像を配置するグリッド */
     .brand-gallery {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* 2列 */
-        grid-template-rows: auto auto;  /* 2行 */
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
         gap: 20px;
         width: 100%;
     }
 
-    /* 各画像のスタイル */
     .brand-img-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
-        border-radius: 4px; /* 少し角丸にすると今っぽい */
+        border-radius: 4px;
     }
 
     /* 1枚目（左上：机） */
@@ -971,15 +998,9 @@ a:hover { opacity: 0.7; }
         margin-top: 0;
     }
 
-   /* PC用エリア内 */
-    
-    /* ③ Brand Philosophy */
-    
-    /* ... (他の設定はそのまま) ... */
-
     /* 2枚目（左下：ペダル） */
     .item-02 {
-        display: block; /* ★追加: スマホで消したのを復活！ */
+        display: block; /* ★ここが重要！スマホで消したのを復活 */
         grid-column: 1 / 2;
         grid-row: 2 / 3;
         width: 80%;
@@ -989,99 +1010,190 @@ a:hover { opacity: 0.7; }
 
     /* 3枚目（右：ジェイミー） */
     .item-03 {
-        display: block; /* ★追加: スマホで消したのを復活！ */
+        display: block; /* ★ここが重要！スマホで消したのを復活 */
         grid-column: 2 / 3;
         grid-row: 1 / 3;
         padding-top: 50px;
     }
 
-    /* ④ Onomato (文字左 / 画像右) */
-    .onomato .container {
+    /* PC用エリア内 */
+
+    /* ③ Brand Philosophy */
+    
+    /* ★追加: セクション自体を「画面の高さ(100vh)」にする */
+    .section.brand-philosophy {
+        min-height: 100vh;     /* 最低でも画面いっぱいの高さ */
+        display: flex;         /* 中身を上下中央にするため */
+        align-items: center;   /* 上下中央揃え */
+        padding-top: 0;        /* 余分な余白を消す */
+        padding-bottom: 0;
+    }
+
+    /* コンテナの設定（既存のコードに height: 100% を足すイメージ） */
+    .brand-philosophy .container {
         display: flex;
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        flex-direction: row-reverse; /* グリッド右 / 文字左 */
+        gap: 80px;
         position: relative;
-    }
-    
-    .onomato__grid {
-        width: 55%;
-        margin-bottom: 0;
-        gap: 30px; /* グリッド間隔広げる */
-    }
-    
-    /* 文字エリアを擬似的に左側に配置 */
-    .onomato-desc {
-        width: 35%;
-        margin-top: 0;
-        font-size: 1rem;
-        text-align: left; /* 左寄せ */
         
-        /* カンプに合わせてロゴの下に来るように配置 */
-        display: flex;
-        flex-direction: column;
+        /* ★追加: コンテナも高さを確保 */
+        height: 100%;
+        width: 100%;
     }
-    
-    /* ロゴの位置調整 */
-    .onomato__logo {
-        width: 300px;
-        margin: 0 0 50px 0; /* 下に余白 */
-    }
-    
-    /* 構造上、ロゴと説明文が離れている場合のレイアウトハック */
-    /* フレックスボックスの順序を操作して、ロゴ(上)→説明(下)のように見せる */
+
+    /* PC用エリア内 */
+
+    /* PC用エリア内 */
+
+    /* ④ Onomato (PC Layout: Centered Stack) */
     .onomato .container {
-        align-items: center; 
+        display: flex;
+        flex-direction: column; /* 上から下に積む */
+        align-items: center;    /* 中央揃え */
+        position: relative;
+        padding-top: 40px;      /* 上に少し余白 */
     }
     
+    /* 1段目: ロゴ (390px) */
+    .onomato__logo {
+        width: 390px;
+        max-width: 100%;
+        margin: 0 0 40px 0; /* 下に余白 */
+        order: 1; /* ★並び順: 1番目 */
+    }
+    
+    /* 2段目: 本文 (700px) */
+    .onomato-desc {
+        width: 100%;
+        max-width: 700px;     /* ★指定: 幅700px */
+        margin-top: 0;
+        margin-bottom: 60px;  /* 画像との間隔 */
+        font-size: 1rem;
+        line-height: 2;
+        text-align: center;   /* ★指定: 中央揃え */
+        
+        /* HTMLでは画像の下にあるので、orderで上に持ってくる */
+        order: 2; /* ★並び順: 2番目 */
+        
+        /* 念のためFlexbox解除 */
+        display: block; 
+    }
+    
+    /* 3段目: GIF画像4枚 (220px x 4) */
+    .onomato__grid {
+        width: 100%;
+        /* GIF4枚(880px) + 隙間(60px)が入る幅を確保 */
+        max-width: 1000px; 
+        margin-bottom: 0;
+        
+        display: flex;          /* 横並び */
+        justify-content: center; /* 中央寄せ */
+        gap: 20px;              /* 画像間の隙間 */
+        
+        order: 3; /* ★並び順: 3番目 */
+    }
+    
+    /* 画像アイテム設定 */
+    .onomato-item {
+        width: 220px;  /* ★指定: 幅 */
+        height: 220px; /* ★指定: 高さ */
+        flex-shrink: 0; /* 画面が広くても220pxを維持（狭いときは自動縮小させたい場合は1にする） */
+    }
+    
+    .onomato-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* アスペクト比を保って収める */
+        display: block;
+        border-radius: 8px;
+        transition: transform 0.3s;
+    }
+    
+    /* ホバーで浮く演出 */
+    .onomato-item:hover img {
+        transform: translateY(-10px);
+    }
+    
+
+    /* PC用エリア内 */
 
     /* --- Footer (PC Layout) --- */
     .footer {
-        padding-top: 100px;
-        padding-bottom: 60px;
+        padding-top: 200px;
+        padding-bottom: 100px;
+        background-color: #fff;
     }
     
     .footer .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
+        display: block; 
         position: relative;
+        min-height: 260px; 
     }
 
-    /* 左側：ナビゲーション */
+    /* ① ナビゲーション (左側) */
     .footer-nav-grid {
-        width: 50%;
+        width: 55%;
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 3列 */
-        gap: 40px;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 40px;
+        row-gap: 50px;
         margin-bottom: 0;
     }
     
-    /* 右側ブロック (ロゴ + 情報) */
-    .footer-right-block {
-        /* HTML構造を変えずにCSSで右側に寄せるための仮想エリア想定 */
-        /* 今回はpositionで配置します */
+    /* ★修正: 画像サイズの上書きを削除しました */
+    .footer-link img {
+        /* height: 22px; ← これを削除して元のサイズに戻します */
+        height: auto; 
+        width: auto; /* グローバル設定の幅(104pxなど)が効くようになります */
+        transition: opacity 0.3s;
+    }
+    .footer-link:hover {
+        opacity: 0.6;
     }
 
+    /* ② ロゴ (右上) */
     .footer-top-logo {
         position: absolute;
-        top: 0;
-        right: 0;
-        width: 250px;
+        top: -10px;
+        
+        /* ★修正: right: 0 ではなく、パディング分の 190px を指定 */
+        right: 190px; 
+        
+        width: 360px;
+        margin: 0;
         text-align: right;
     }
     
+    /* ③ 会社情報とSNS (右下) */
     .footer-bottom-info {
         position: absolute;
         bottom: 0;
-        right: 0;
+        
+        /* ★修正: ここも 190px に */
+        right: 190px;
+        
         text-align: right;
         width: auto;
     }
     
+    .distributor-text {
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 25px;
+        display: block;
+    }
+    
+    /* SNSアイコン */
     .footer-social-row {
         justify-content: flex-end;
-        margin-top: 20px;
+        gap: 20px;
+    }
+    .footer-social-row img {
+        /* ★修正: 40px から元の 48px に戻しました */
+        width: 48px; 
+        height: 48px;
     }
 
 /* PC用の設定エリア内 */
